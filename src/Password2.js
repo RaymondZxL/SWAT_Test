@@ -14,10 +14,6 @@ export default class Login extends Component {
 	    title: 'SWAT',
     };
 
-    onSubmit(){
-    	firebase.auth().sendPasswordResetEmail(this.props.navigation.getParam('email', 'None'));
-    }
-
 	render(){
 		const {navigation} = this.props;
 		const email = navigation.getParam('email', 'None')

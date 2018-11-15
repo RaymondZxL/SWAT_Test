@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, KeyboardAvoidingView } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
+import firebase from 'react-native-firebase';
 
 import styles from '../src/Styles'
 
@@ -31,7 +32,18 @@ export default class Password extends React.Component {
 		}
 		else {
 			const email = this.state.email;
-			this.props.navigation.navigate('Password2', {email: email,});
+			firebase.auth().sendPasswordResetEmail(email).then(function() {
+		        alert('Email Sent!')
+		      }).catch(function(error) {
+		        var errorCode = error.code;
+		        var errorMessage = error.message;
+		        if (errorCode == 'auth/invalid-email') {
+		          alert(errorMessage);
+		        } else if (errorCode == 'auth/user-not-found') {
+		          alert(errorMessage);
+		        }
+		    });
+			
 		}
 	}
 

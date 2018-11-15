@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
+import firebase from 'react-native-firebase';
 import styles from './Styles'
 const dismissKeyboard = require('dismissKeyboard');
 
@@ -19,6 +20,8 @@ export default class App extends Component {
       },
       email: '',
       password: '',
+      timePassed: false,
+
     }
   }
 
@@ -29,7 +32,6 @@ export default class App extends Component {
 
   onLogin() {
     const { email, password } = this.state;
-
     if(this.state.email === '' || this.state.password === ''){
       alert('Empty!');
     }
@@ -40,7 +42,10 @@ export default class App extends Component {
       }else{
         this.state.user.email = this.state.email;
         this.state.user.password = this.state.password;
-        this.props.navigation.navigate('Home', {user:this.state.user});
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error){
+          var errorMeg = error.message;
+          alert(errorMeg);
+        });
       }
     }
   }

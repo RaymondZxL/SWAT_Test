@@ -33,8 +33,16 @@ export default class NewUser extends React.Component {
 		}else if (date_regex.test(this.state.birthday) === false){
 			alert('Invalid Birthday!');
 		}else{
-			firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
-			this.props.navigation.navigate('Home');
+			firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+		      	var errorCode = error.code;
+		        var errorMessage = error.message;
+		        if (errorCode == 'auth/weak-password') {
+		          alert('The password is too weak.');
+		        } else {
+		          alert(errorMessage);
+		        }
+		    });
+			this.props.navigation.navigate('Home', firebase.auth().currentUser);
 			}
 		}
 
