@@ -33,7 +33,7 @@ export default class NewUser extends React.Component {
 		}else if (date_regex.test(this.state.birthday) === false){
 			alert('Invalid Birthday!');
 		}else{
-			firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+			firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
 		      	var errorCode = error.code;
 		        var errorMessage = error.message;
 		        if (errorCode == 'auth/weak-password') {
@@ -42,7 +42,33 @@ export default class NewUser extends React.Component {
 		          alert(errorMessage);
 		        }
 		    });
-			this.props.navigation.navigate('Home', firebase.auth().currentUser);
+
+		    var i = 0;
+        		while(i <= 8000000){
+          		i++;
+        	}
+        	firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
+		    });
+
+			var i = 0;
+        		while(i <= 8000000){
+          		i++;
+        	}
+
+		    firebase.auth().onAuthStateChanged(user =>{
+	          if(user){
+	           	firebase.auth().currentUser.updateProfile({
+		    		name: this.state.name,
+		    		birthday: this.state.birthday
+		    	}).then(function(){this.props.navigation.navigate('Home')}).catch(function(){});
+	          }else{
+	            alert("Something went wrong, try again later!");
+	          }
+	        });
+
+	        this.props.navigation.navigate('Home')
+		    
+			//this.props.navigation.navigate('Home');
 			}
 		}
 

@@ -20,7 +20,7 @@ export default class App extends Component {
       },
       email: '',
       password: '',
-      timePassed: false,
+      login: false,
 
     }
   }
@@ -29,6 +29,8 @@ export default class App extends Component {
     headerLeft: null,
     title: 'SWAT',
   };
+
+  
 
   onLogin() {
     const { email, password } = this.state;
@@ -45,6 +47,17 @@ export default class App extends Component {
         firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error){
           var errorMeg = error.message;
           alert(errorMeg);
+        });
+        var i = 0;
+        while(i <= 8000000){
+          i++;
+        }
+        firebase.auth().onAuthStateChanged(user =>{
+          if(user){
+            this.props.navigation.navigate('Home');
+          }else{
+            this.props.navigation.navigate('Main');
+          }
         });
       }
     }
@@ -103,6 +116,6 @@ export default class App extends Component {
       </View>
 
       </TouchableWithoutFeedback>
-        );
-      }
-    }
+    );
+  }
+}
