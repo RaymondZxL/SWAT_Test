@@ -49,7 +49,7 @@ export default class App extends Component {
           alert(errorMeg);
         });
         var i = 0;
-        while(i <= 8000000){
+        while(i <= 100000000){
           i++;
         }
         firebase.auth().onAuthStateChanged(user =>{

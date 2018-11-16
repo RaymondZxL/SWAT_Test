@@ -13,7 +13,8 @@ export default class NewUser extends React.Component {
 			birthday: '',
 			password: '',
 			re_password: '',
-		}	}
+		}	
+	}
 
 	static navigationOptions = {
 		title: 'Creating Account',
