@@ -3,9 +3,9 @@ import { Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Ima
 import { createStackNavigator } from 'react-navigation';
 import firebase from 'react-native-firebase';
 import TabNavigator from 'react-native-tab-navigator';
-import Icon from 'react-native-vector-icons/Ionicons';
-import styles from './Styles'
-import MainPage from './MainPage'
+//import Icon from 'react-native-vector-icons/Ionicons';
+import styles from '../src/Styles'
+import MainPage from '../src/MainPage'
 
 export default class Home extends Component {
   constructor(props) {
@@ -31,9 +31,17 @@ export default class Home extends Component {
     var user = firebase.auth().currentUser;
     if(user){
       firebase.auth().signOut();
+      this.props.navigation.navigate('Main');
     }else{
       alert("User not logged in!");
     }
+
+    var i = 0;
+      while(i <= 100000000/4){
+        i++;
+    }
+
+    
   }
 
   render(){
@@ -42,8 +50,8 @@ export default class Home extends Component {
       <TabNavigator.Item
         title="Home"
         selected={this.state.selectedTab === 'home'}
-        renderIcon={() => <Icon name={'ios-home'} size={22}/>}
-        renderSelectedIcon={() => <Icon name={'ios-home'} size={22} color={'blue'}/>}
+        //renderIcon={() => <Icon name={'ios-home'} size={22}/>}
+        //renderSelectedIcon={() => <Icon name={'ios-home'} size={22} color={'blue'}/>}
         onPress={() => this.setState({selectedTab: 'home'})}
       >
       <MainPage/>
@@ -51,8 +59,8 @@ export default class Home extends Component {
       <TabNavigator.Item
           title="MyEvent"
           selected={this.state.selectedTab === 'event'}
-          renderIcon={()=> <Icon name={'ios-albums'} size={22}/>}
-          renderSelectedIcon={()=> <Icon name={'ios-albums'} size={22} color={'blue'}/>}
+          //renderIcon={()=> <Icon name={'ios-albums'} size={22}/>}
+          //renderSelectedIcon={()=> <Icon name={'ios-albums'} size={22} color={'blue'}/>}
           onPress={()=>this.setState({selectedTab: 'event'})}
         >
       <Text>ggg</Text>
@@ -60,8 +68,8 @@ export default class Home extends Component {
       <TabNavigator.Item
         title="Create"
         selected={this.state.selectedTab === 'create'}
-        renderIcon={() => <Icon name={'ios-add'} size={22}/>}
-        renderSelectedIcon={()=> <Icon name={'ios-add'} size={22} color={'blue'}/>}
+        //renderIcon={() => <Icon name={'ios-add'} size={22}/>}
+        //renderSelectedIcon={()=> <Icon name={'ios-add'} size={22} color={'blue'}/>}
         onPress={()=>this.setState({selectedTab: 'create'})}
       >
         <Text>hfuehfueh</Text>
@@ -69,13 +77,13 @@ export default class Home extends Component {
       <TabNavigator.Item
         title="Profile"
         selected={this.state.selectedTab === 'profile'}
-        renderIcon={() => <Icon name={'ios-book'} size={22}/>}
-        renderSelectedIcon={()=> <Icon name={'ios-book'} size={22} color={'blue'}/>}
+        //renderIcon={() => <Icon name={'ios-book'} size={22}/>}
+        //renderSelectedIcon={()=> <Icon name={'ios-book'} size={22} color={'blue'}/>}
         onPress={()=> this.setState({selectedTab: 'profile'})}
       >
         <TouchableOpacity
         style={styles.button1}
-        onPress={this.Logout}
+        onPress={this.Logout.bind(this)}
         >
         <Text style={styles.buttonText}> Log out </Text>
         </TouchableOpacity>

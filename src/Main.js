@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import firebase from 'react-native-firebase';
-import styles from './Styles'
+import styles from '../src/Styles'
 const dismissKeyboard = require('dismissKeyboard');
 
 export default class App extends Component {
@@ -48,10 +48,12 @@ export default class App extends Component {
           var errorMeg = error.message;
           alert(errorMeg);
         });
+
         var i = 0;
         while(i <= 100000000){
           i++;
         }
+
         firebase.auth().onAuthStateChanged(user =>{
           if(user){
             this.props.navigation.navigate('Home');

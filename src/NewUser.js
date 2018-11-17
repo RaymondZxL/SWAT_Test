@@ -44,17 +44,18 @@ export default class NewUser extends React.Component {
 		        }
 		    });
 
-		    var i = 0;
-        		while(i <= 8000000){
+		    /*var i = 0;
+        		while(i <= 100000000){
           		i++;
-        	}
+        	}*/
+
         	firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
 		    });
 
-			var i = 0;
-        		while(i <= 8000000){
+			/*var i = 0;
+        		while(i <= 100000000){
           		i++;
-        	}
+        	}*/
 
 		    firebase.auth().onAuthStateChanged(user =>{
 	          if(user){
@@ -67,7 +68,7 @@ export default class NewUser extends React.Component {
 	          }
 	        });
 
-	        this.props.navigation.navigate('Home')
+	        this.props.navigation.navigate('Main')
 		    
 			//this.props.navigation.navigate('Home');
 			}
