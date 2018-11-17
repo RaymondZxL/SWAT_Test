@@ -22,7 +22,7 @@ export default class NewUser extends React.Component {
 
 	user = this.props.navigation.getParam('user', 'Error');
 
-	onSubmit(){
+	async onSubmit(){
 		const reg = /^\w+([\.-]?\w+)*@ucsd.edu$/;
 		const date_regex = /^\d{2}\/\d{2}\/\d{4}$/;
 		if(this.state.email === '' || this.state.name === '' || this.state.birthday === '' || this.state.password === '' || this.state.re_password === ''){
@@ -34,7 +34,7 @@ export default class NewUser extends React.Component {
 		}else if (date_regex.test(this.state.birthday) === false){
 			alert('Invalid Birthday!');
 		}else{
-			firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
+			await firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
 		      	var errorCode = error.code;
 		        var errorMessage = error.message;
 		        if (errorCode == 'auth/weak-password') {
@@ -49,7 +49,7 @@ export default class NewUser extends React.Component {
           		i++;
         	}*/
 
-        	firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
+        	await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
 		    });
 
 			/*var i = 0;
@@ -57,7 +57,7 @@ export default class NewUser extends React.Component {
           		i++;
         	}*/
 
-		    firebase.auth().onAuthStateChanged(user =>{
+		    await firebase.auth().onAuthStateChanged(user =>{
 	          if(user){
 	           	firebase.auth().currentUser.updateProfile({
 		    		name: this.state.name,

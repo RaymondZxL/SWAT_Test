@@ -33,7 +33,7 @@ export default class Password extends React.Component {
 		else {
 			const email = this.state.email;
 			firebase.auth().sendPasswordResetEmail(email).then(function() {
-		        alert('Email Sent!')
+		        alert('Email Sent!');
 		      }).catch(function(error) {
 		        var errorCode = error.code;
 		        var errorMessage = error.message;
@@ -43,7 +43,7 @@ export default class Password extends React.Component {
 		          alert(errorMessage);
 		        }
 		    });
-			
+			this.props.navigation.navigate('Main');
 		}
 	}
 
