@@ -30,9 +30,17 @@ export default class App extends Component {
     title: 'SWAT',
   };
 
-  
+  componentDidMount(){
+    firebase.auth().onAuthStateChanged(user =>{
+      if(user){
+        this.props.navigation.navigate('Home');
+      }else{
+        this.props.navigation.navigate('Main');
+      }
+    });
+  }
 
-  onLogin() {
+  async onLogin() {
     const { email, password } = this.state;
     if(this.state.email === '' || this.state.password === ''){
       alert('Empty!');
@@ -44,15 +52,10 @@ export default class App extends Component {
       }else{
         this.state.user.email = this.state.email;
         this.state.user.password = this.state.password;
-        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error){
+        await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error){
           var errorMeg = error.message;
           alert(errorMeg);
         });
-
-        var i = 0;
-        while(i <= 100000000){
-          i++;
-        }
 
         firebase.auth().onAuthStateChanged(user =>{
           if(user){
