@@ -8,6 +8,8 @@ import NewUser from './src/NewUser'
 import Password from './src/Password'
 import Password2 from './src/Password2'
 import Home from './src/Home'
+import Login from './src/Login'
+import MyEvents from './src/MyEvents'
 
 let screen = Dimensions.get('window');
 
@@ -18,6 +20,8 @@ const App = createStackNavigator({
   Password: {screen: Password},
   Password2: {screen: Password2},
   Home: {screen: Home},
+  temp: {screen: Login},
+  MyEvent: {screen: MyEvents},
 });
 
 export default App;

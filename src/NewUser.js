@@ -39,8 +39,10 @@ export default class NewUser extends React.Component {
 		        var errorMessage = error.message;
 		        if (errorCode == 'auth/weak-password') {
 		          alert('The password is too weak.');
+		          return;
 		        } else {
 		          alert(errorMessage);
+		          return;
 		        }
 		    });
 
@@ -50,29 +52,43 @@ export default class NewUser extends React.Component {
         	}*/
 
         	await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
-		    });
+		    return;});
 
 			/*var i = 0;
         		while(i <= 100000000){
           		i++;
         	}*/
+           	await firebase.auth().currentUser.updateProfile({
+           		displayName: this.state.name, 
+           		email: this.state.email,
+           	}).then(function(){
+           	}).catch(function(error){
+           		alert(error.errorMessage);
+           		return;
+           	});
 
-		    await firebase.auth().onAuthStateChanged(user =>{
-	          if(user){
-	           	firebase.auth().currentUser.updateProfile({
-		    		name: this.state.name,
-		    		birthday: this.state.birthday
-		    	}).then(function(){this.props.navigation.navigate('Home')}).catch(function(){});
-	          }else{
-	            alert("Something went wrong, try again later!");
-	          }
-	        });
+           	var user = firebase.auth().currentUser;
 
-	        this.props.navigation.navigate('Main')
-		    
-			//this.props.navigation.navigate('Home');
-			}
-		}
+           	await firebase.database().ref('Users/').child(user.uid).set({
+		        name: this.state.name,
+		        email: this.state.email,
+		        uid: user.uid,
+		        ListOfEvents: [],
+		        numberOfEvents: 0,
+		        birthday: this.state.birthday,
+		    }).then((data)=>{
+		        //success callback
+		        alert('Account Created!');
+		        this.props.navigation.navigate('Main');
+		        console.log('data ' , data)
+		    }).catch((error)=>{
+		        //error callback
+		        console.log('error ' , error)
+		    })
+
+	    }
+	}
+
 
 	render(){
 

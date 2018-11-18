@@ -6,6 +6,9 @@ import TabNavigator from 'react-native-tab-navigator';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from '../src/Styles'
 import MainPage from '../src/MainPage'
+import Profile from '../src/Profile'
+import CreateEvent from '../src/CreateEvent'
+import MyEvent from '../src/MyEvents'
 
 export default class Home extends Component {
   constructor(props) {
@@ -66,7 +69,7 @@ export default class Home extends Component {
           renderSelectedIcon={()=> <Icon name={'ios-albums'} size={22} color={'blue'}/>}
           onPress={()=>this.setState({selectedTab: 'event'})}
         >
-      <Text>ggg</Text>
+      <MyEvent para={this.props}/>
       </TabNavigator.Item>
       <TabNavigator.Item
         title="Create"
@@ -75,7 +78,7 @@ export default class Home extends Component {
         renderSelectedIcon={()=> <Icon name={'ios-add'} size={22} color={'blue'}/>}
         onPress={()=>this.setState({selectedTab: 'create'})}
       >
-        <Text>hfuehfueh</Text>
+        <CreateEvent/>
       </TabNavigator.Item>
       <TabNavigator.Item
         title="Profile"
@@ -83,8 +86,9 @@ export default class Home extends Component {
         renderIcon={() => <Icon name={'ios-book'} size={22}/>}
         renderSelectedIcon={()=> <Icon name={'ios-book'} size={22} color={'blue'}/>}
         onPress={()=> this.setState({selectedTab: 'profile'})}
-      >
+        >
         <View style={styles.container}>
+        <Profile para={this.props}/>
         <TouchableOpacity
         style={styles.button1}
         onPress={this.Logout.bind(this)}

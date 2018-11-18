@@ -39,11 +39,13 @@ export default class Password extends React.Component {
 		        var errorMessage = error.message;
 		        if (errorCode == 'auth/invalid-email') {
 		          alert(errorMessage);
+		          return;
 		        } else if (errorCode == 'auth/user-not-found') {
 		          alert(errorMessage);
+		          return;
 		        }
 		    });
-			this.props.navigation.navigate('Main');
+			this.props.navigation.navigate('Password2', {email: this.state.email});
 		}
 	}
 
