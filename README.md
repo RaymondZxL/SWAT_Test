@@ -6,3 +6,7 @@ npm install —save react-native-elements
 npm install —save react-native-responsive-image
 
 npm install —save react-native-tag-select
+
+npm install —save react-native-scrollable-tab-view
+
+npm install —save react-native-scrollable-datepicker
