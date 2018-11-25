@@ -10,5 +10,7 @@ target 'SWAT2' do
   pod 'Firebase/Database'
   pod 'Firebase/Auth'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
 end
 

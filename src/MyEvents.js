@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { FlatList, Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import {ScrollView, View, FlatList, Alert, Button, Text, TouchableOpacity, TextInput, StyleSheet, Image, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import firebase from 'react-native-firebase';
+import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
+import CardList from '../src/CardList';
 
 import styles from '../src/Styles'
 
 const dismissKeyboard = require('dismissKeyboard')
 
-export default class Profile extends Component{
+export default class MyEvent extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -48,36 +50,49 @@ export default class Profile extends Component{
       }
 
       this.setState({obj:'sdasd'});
-
-		    
 		}
 	}
 
 
 
     render(){
+      const {navigation} = this.props.para
       return(
-        <TouchableWithoutFeedback behavior="padding" onPress={()=>{dismissKeyboard()}}>
-        <ScrollView>
-        <View style={styles.container}>
-        <FlatList
-          directionalLockEnabled={true}
-          ItemSeparatorComponent={ ()=> <View style={ { height:10,} } />}
-          data={this.state.buffer}
-          renderItem={({item}) => <View>
-            <TouchableOpacity style={styles.container}
-                              onPress={() => {this.props.para.navigation.navigate('temp')}}>
-             <View>
-                <Text>{item.key}</Text>
-                <Text>{item.desc}</Text>
-             </View>
-            </TouchableOpacity>
-            </View>
-        }
-        />
-        </View>
+      //   <TouchableWithoutFeedback behavior="padding" onPress={()=>{dismissKeyboard()}}>
+      //   <ScrollView>
+      //   <View style={styles.container}>
+      //   <FlatList
+      //     directionalLockEnabled={true}
+      //     ItemSeparatorComponent={ ()=> <View style={ { height:10,} } />}
+      //     data={this.state.buffer}
+      //     renderItem={({item}) => <View>
+      //       <TouchableOpacity style={styles.container}
+      //                         onPress={() => {this.props.para.navigation.navigate('temp')}}>
+      //        <View>
+      //           <Text>{item.key}</Text>
+      //           <Text>{item.desc}</Text>
+      //        </View>
+      //       </TouchableOpacity>
+      //       </View>
+      //   }
+      //   />
+      //   </View>
+      //   </ScrollView>
+      // </TouchableWithoutFeedback>
+      <ScrollableTabView
+        style={{marginTop: 5, marginBottom: 0}}
+        initialPage={0}
+        tabBarActiveTextColor='#E3170D'
+        tabBarUnderlineStyle={{backgroundColor: '#E3170D'}}
+        renderTabBar={()=><ScrollableTabBar tabStyle={{height:39}}/>}
+      >
+        <ScrollView tabLabel="Attending">
+          <CardList navigation={navigation}/>
         </ScrollView>
-      </TouchableWithoutFeedback>
+        <ScrollView tabLabel="Hosting">
+          <View></View>
+        </ScrollView>
+      </ScrollableTabView>
       )
     }  
 }

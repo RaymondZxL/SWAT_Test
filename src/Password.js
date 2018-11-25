@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, KeyboardAvoidingView } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
+import {createStackNavigator, NavigationActions} from 'react-navigation';
 import firebase from 'react-native-firebase';
 
 import styles from '../src/Styles'
@@ -14,8 +14,6 @@ export default class Password extends React.Component {
 			name: "",
 			items:[]
 		}
-
-
 	}
 
 	static navigationOptions = {
@@ -39,37 +37,40 @@ export default class Password extends React.Component {
 		        var errorMessage = error.message;
 		        if (errorCode == 'auth/invalid-email') {
 		          alert(errorMessage);
-		          return;
 		        } else if (errorCode == 'auth/user-not-found') {
 		          alert(errorMessage);
-		          return;
 		        }
 		    });
-			this.props.navigation.navigate('Password2', {email: this.state.email});
+			this.props.navigation.navigate('Main');
 		}
 	}
 
 	render(){
 		return(
-			<KeyboardAvoidingView style={styles.container} behavior="padding">
-			<View style={styles.container}>
-			<Text style={styles.title}> Resetting Password </Text>
-			<TextInput
-			maxLength={40}
-          	value={this.state.email}
-          	keyboardType = 'email-address'
-          	onChangeText={(email) => this.setState({ email })}
-          	placeholder='example@ucsd.edu'
-          	placeholderTextColor = 'gray'
-          	style={styles.input} />
+			<KeyboardAvoidingView style={styles.container1} behavior="padding">
+				<View style={styles.container1}>
+					<Text style={styles.title}> Reset Password </Text>
+					<TextInput
+						maxLength={40}
+          				value={this.state.email}
+          				keyboardType = 'email-address'
+						onChangeText={(email) => this.setState({ email })}
+          				placeholder='example@ucsd.edu'
+          				placeholderTextColor = 'gray'
+          				style={styles.input}
+          			/>
 
-			<TouchableOpacity
-          	style={styles.button1}
-          	onPress={this.onSubmit.bind(this) }
-        	>
-         	<Text style={styles.buttonText}> Submit </Text>
-       		</TouchableOpacity>
-			</View>
+					<TouchableOpacity style={styles.button1} onPress={this.onSubmit.bind(this) }>
+         				<Text style={styles.submitText}> Submit </Text>
+       				</TouchableOpacity>
+
+					<View style={{flexDirection: 'row'}}>
+    					<Text style={{fontSize: 15}}>Just remembered?</Text>
+						<TouchableOpacity onPress={() => {this.props.navigation.reset([NavigationActions.navigate({routeName:'Main'})], 0)}}>
+    						<Text style={styles.buttonText1}>Sign in</Text>
+        				</TouchableOpacity>
+					</View>
+				</View>
 			</KeyboardAvoidingView>
 		)
 	}

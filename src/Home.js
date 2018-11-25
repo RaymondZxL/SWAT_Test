@@ -8,11 +8,12 @@ import styles from '../src/Styles'
 import MainPage from '../src/MainPage'
 import Profile from '../src/Profile'
 import CreateEvent from '../src/CreateEvent'
-import MyEvent from '../src/MyEvents'
+import MyEvents from '../src/MyEvents'
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
+    handleToChangeSelectedTab = this.handleToChangeSelectedTab.bind(this)
     this.state = {
       user: {
         email: "",
@@ -31,8 +32,20 @@ export default class Home extends Component {
     title: 'SWAT',
   };
 
+  handleToChangeSelectedTab(tab) {
+    this.setState({selectedTab: tab})
+  }
 
-
+  // await firebase.auth().currentUser.updateProfile({
+  //   displayName: this.state.name, 
+  //    email: this.state.email,
+  //  }).then(function() {
+  //    // alert('');
+  //  }).catch(function(error) {
+  //    alert(error.errorMessage);
+  //    return;
+  //  });
+   
   Logout(){
     var user = firebase.auth().currentUser;
     if(user){
@@ -42,49 +55,63 @@ export default class Home extends Component {
       alert("User not logged in!");
     }
 
-    var i = 0;
-      while(i <= 100000000/4){
-        i++;
-    }
+    // var i = 0;
+    //   while(i <= 100000000/4){
+    //     i++;
+    // }
 
-    
+    // user = firebase.auth().currentUser;
+    // if (user) {
+    //   firebase.auth().signOut().then(function(){
+    //     this.props.navigation.navigate('Main');
+    //   },function(error){
+    //     alert("User not log in!")
+    //   });
+    // }
   }
 
   render(){
+    handleToChangeSelectedTab = this.handleToChangeSelectedTab
+    const {navigation} = this.props
     return(
       <TabNavigator tabBarStyle={{backgroundColor:'white'}} style={{backgroundColor:'white'}}>
       <TabNavigator.Item
         title="Home"
+        selectedTitleStyle={{color: '#E3170D', fontWeight: 'bold'}}
         selected={this.state.selectedTab === 'home'}
-        renderIcon={() => <Icon name={'ios-home'} size={22}/>}
-        renderSelectedIcon={() => <Icon name={'ios-home'} size={22} color={'blue'}/>}
+        renderIcon={() => <Icon name={'md-home'} size={22}/>}
+        renderSelectedIcon={() => <Icon name={'md-home'} size={22} color={'#E3170D'}/>}
         onPress={() => this.setState({selectedTab: 'home'})}
       >
-      <MainPage/>
+      <MainPage navigation={navigation}/>
       </TabNavigator.Item>
       <TabNavigator.Item
           title="MyEvent"
+          selectedTitleStyle={{color: '#E3170D', fontWeight: 'bold'}}
           selected={this.state.selectedTab === 'event'}
-          renderIcon={()=> <Icon name={'ios-albums'} size={22}/>}
-          renderSelectedIcon={()=> <Icon name={'ios-albums'} size={22} color={'blue'}/>}
+          renderIcon={()=> <Icon name={'md-calendar'} size={22}/>}
+          renderSelectedIcon={()=> <Icon name={'md-calendar'} size={22} color={'#E3170D'}/>}
           onPress={()=>this.setState({selectedTab: 'event'})}
         >
-      <MyEvent para={this.props}/>
+        <MyEvents para={this.props}/>
+        {/* <MyEvents {...this.props}/> */}
       </TabNavigator.Item>
       <TabNavigator.Item
         title="Create"
+        selectedTitleStyle={{color: '#E3170D', fontWeight: 'bold'}}
         selected={this.state.selectedTab === 'create'}
-        renderIcon={() => <Icon name={'ios-add'} size={22}/>}
-        renderSelectedIcon={()=> <Icon name={'ios-add'} size={22} color={'blue'}/>}
+        renderIcon={() => <Icon name={'ios-add-circle-outline'} size={22}/>}
+        renderSelectedIcon={()=> <Icon name={'ios-add-circle-outline'} size={22} color={'#E3170D'}/>}
         onPress={()=>this.setState({selectedTab: 'create'})}
       >
-        <CreateEvent/>
+        <CreateEvent handleToChangeSelectedTab= {handleToChangeSelectedTab.bind(this)} {...this.props}/>
       </TabNavigator.Item>
       <TabNavigator.Item
         title="Profile"
+        selectedTitleStyle={{color: '#E3170D', fontWeight: 'bold'}}
         selected={this.state.selectedTab === 'profile'}
-        renderIcon={() => <Icon name={'ios-book'} size={22}/>}
-        renderSelectedIcon={()=> <Icon name={'ios-book'} size={22} color={'blue'}/>}
+        renderIcon={() => <Icon name={'ios-person'} size={22}/>}
+        renderSelectedIcon={()=> <Icon name={'ios-person'} size={22} color={'#E3170D'}/>}
         onPress={()=> this.setState({selectedTab: 'profile'})}
         >
         <View style={styles.container}>
@@ -102,3 +129,10 @@ export default class Home extends Component {
     )
   }
 }
+
+// function mapStateToProps(state) {
+//   return {
+//     state: state, 
+    
+//   }
+// }

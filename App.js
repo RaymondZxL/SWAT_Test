@@ -10,6 +10,9 @@ import Password2 from './src/Password2'
 import Home from './src/Home'
 import Login from './src/Login'
 import MyEvents from './src/MyEvents'
+import ChangeProfile from './src/ChangeProfile'
+import EventDetail from './src/Event_detail'
+
 
 let screen = Dimensions.get('window');
 
@@ -21,7 +24,9 @@ const App = createStackNavigator({
   Password2: {screen: Password2},
   Home: {screen: Home},
   temp: {screen: Login},
-  MyEvent: {screen: MyEvents},
+  MyEvents: {screen: MyEvents},
+  ChangeProfile: {screen: ChangeProfile},
+  EventDetail: {screen: EventDetail},
 });
 
 export default App;
