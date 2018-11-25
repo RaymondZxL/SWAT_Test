@@ -9,4 +9,4 @@ npm install —save react-native-tag-select
 
 npm install —save react-native-scrollable-tab-view
 
-npm install —save react-native-scrollable-datepicker
+npm install —save react-native-datepicker
