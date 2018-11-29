@@ -20,3 +20,7 @@ npm install —save react-native-datepicker
 yarn add react-native-image-picker
 
 react-native link react-native-image-picker
+
+npm start
+
+react-native run-ios
