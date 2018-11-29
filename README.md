@@ -1,4 +1,10 @@
 # SWAT_Test
+npm install
+
+react-native link
+
+react-native run-ios
+
 npm install --save react-native-material-menu
 
 npm install —save react-native-elements
