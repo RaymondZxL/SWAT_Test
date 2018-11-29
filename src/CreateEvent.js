@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, Dimensions } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator,NavigationActions} from 'react-navigation';
 import firebase from 'react-native-firebase';
 import DatePicker from 'react-native-datepicker'
 import Icon from 'react-native-vector-icons/EvilIcons'
@@ -32,7 +32,7 @@ export default class Profile extends Component{
       date:'',
       time: '',
       location: '',
-      tag: null
+      tag: []
 		}
 	}
 
@@ -50,6 +50,8 @@ export default class Profile extends Component{
     else if (this.tag.totalSelected == 0)
       alert('Please select at least one category')
     else {
+      
+      // this.props.navigation.reset([NavigationActions.navigate({routeName: 'Home'})], 0)
       user = firebase.auth().currentUser;
       if(user != null){
         var numberOfEvents = 0;
@@ -63,25 +65,46 @@ export default class Profile extends Component{
               date: this.state.date,
               time: this.state.time,
               user: user.email,
-              category:JSON.stringify(this.tag.itemsSelected) 
+              category:this.tag.itemsSelected
           }).then((data)=>{
               //success callback
-              handleToChangeSelectedTab = this.props.handleToChangeSelectedTab;
-              handleToChangeSelectedTab('event')
-              this.props.navigation.reset([NavigationActions.navigate({routeName: 'Home'})], 0)
+              // handleToChangeSelectedTab = this.props.handleToChangeSelectedTab;
+              // handleToChangeSelectedTab('event')
+              // this.props.navigation.reset([NavigationActions.navigate({routeName: 'Home'})], 0)
               alert('Event Created Successfully!'); 
           }).catch((error)=>{
               //error callback
               console.log('error ' , error)
+              alert(error.errorMessage)
               return;
           })
           // var a;
           // await firebase.database().ref('Events/').child(0).once('value', function(snapshot){
           //   a = snapshot.val().eventName;
-
+          this.props.navigation.reset([NavigationActions.navigate({routeName: 'Home'})], 0)
+          // handleToChangeSelectedTab = this.props.handleToChangeSelectedTab;
+          // handleToChangeSelectedTab('event')
+      
           // });
 
           // alert(a);
+          await firebase.database().ref('Users/').child(user.uid).once('value', function(snapshot){
+            eventHost=snapshot.val().eventHost;
+          }).catch((error) => {
+            alert(error.errorMessage);
+            return;
+          })
+
+          if (!eventHost)
+            eventHost = []
+          eventHost.push(numberOfEvents)
+          await firebase.database().ref('Users/').child(user.uid).update({
+            eventHost:eventHost
+          }).catch((error)=> {
+            alert(error.errorMessage);
+            return;
+          })
+
           eventN = numberOfEvents
           numberOfEvents += 1;
         
@@ -89,7 +112,7 @@ export default class Profile extends Component{
           await firebase.database().ref('Events').child('NumberOfEvents').set({numberOfEvents});
 
           // await firebase.database().ref('Users').child(user.uid).child('listOfEvents').push({eventN});
-          await firebase.database().ref('Users').child(user.uid).child('NumberOfEvents').set({})
+          // await firebase.database().ref('Users').child(user.uid).child('NumberOfEvents').set({})
       }
 		}
 	}

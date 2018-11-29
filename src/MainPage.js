@@ -1,77 +1,103 @@
 import React, {Component} from 'react';
-import {Text, TouchableWithoutFeedback, StyleSheet, View} from 'react-native';
+import {ScrollView, FlatList,Text, TouchableWithoutFeedback, StyleSheet, View} from 'react-native';
 import {SearchBar} from 'react-native-elements'
 import {Dimensions, PixelRatio} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import Menu, {MenuItem,MenuDivider} from 'react-native-material-menu';
-// import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import CardList from '../src/CardList';
+import firebase from 'react-native-firebase';
 
 const dismissKeyboard = require('dismissKeyboard')
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-export default class SearchPage extends Component {
+export default class MainPage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       value: '',
-      color: 'grey'
+      color: 'grey',
+      data: [],
+      eventArray: [],
     };
+    // setup = this.setup.bind(this)
+    // this.setup()
+  }
+ componentDidMount(){ 
+  // componentWillMount() {
+    this.setup()
+  }
+  async setup() {
+// await setup() {
+    //store all events into array
+    await firebase.database().ref('Events').once('value').then(function(snapshot){
+      snapshot.forEach(function(childSnapshot){
+        if (childSnapshot.key != "NumberOfEvents") {
+          // this.setState({event:childSnapshot.val().eventName})
+          this.state.eventArray.push({
+            // key: childSnapshot.val().key,
+            key: childSnapshot.key,
+            date:childSnapshot.val().date,
+            description:childSnapshot.val().description,
+            eventName:childSnapshot.val().eventName,
+            location:childSnapshot.val().location,
+            time:childSnapshot.val().time,
+            user:childSnapshot.val().user,
+            category:childSnapshot.val().category,
+            favoriteArray:childSnapshot.val().favoriteArray,
+            attending:childSnapshot.val().attending,
+          })
+        }
+      }.bind(this))
+    }.bind(this))
+    // alert(this.state.eventArray)
+    console.log(this.state.eventArray)
+
+    var user = firebase.auth().currentUser;
+    if (user != null) {
+      interest = null
+      // alert(user.email)
+      // alert(user.uid)
+      await firebase.database().ref('Users/').child(user.uid).once('value').then(function(snapshot){
+        interest = snapshot.val().interest;
+        for (var i = 0; i < interest.length; i++) {
+          var cat = interest[i]
+          // console.log(cat)
+          eventArray = this.state.eventArray
+        
+          for(var j = 0; j < eventArray.length; j++) {
+            var event = eventArray[j]
+            // console.log(event)
+            // data = this.state.data
+            var eventCat = event.category
+            // console.log(eventCat)
+            if (eventCat && !this.state.data.includes(event)){
+              for (var p = 0; p < eventCat.length; p++) {
+                if (eventCat[p].id == cat.id)
+                  this.state.data.push(event)
+              }  
+            }
+            // if (!this.state.data.includes(event)) {
+            //   eventCat = event.category
+            //   console.log(eventCat)
+            //   if (eventCat && eventCat.includes(cat))
+            //     this.state.data.push(event)
+            // }
+          }
+
+        }
+        // alert(this.state.data)
+        // console.log(this.state.data)
+
+      }.bind(this))
+      // .catch((error)=> {
+      //   alert(error.errorMessage)
+      // })
+     
+    }
   }
   
-
- 
-    //   render() {
-    //     var data = [["Sort by time: latest-","Sort by location: nearest-","Sort by popularity"]];
-    //     return (
-    //       <TouchableWithoutFeedback style={styles.container} behavior="padding" onPress ={()=>{dismissKeyboard()}}>
-    //       <View style = {{flex: 1}}>
-    //       <View style={styles.container,{marginBottom:-5,backgroundColor:"white"}}>
-    //         <View style = {{flexDirection: "row", justifyContent: "space-around",alignItems:"center"}}>
-    //           <SearchBar 
-    //             lightTheme
-    //             showLoading
-    //             placeholder="Search"
-    //             // platform = "ios"
-    //             containerStyle = {{ flex: 8,borderWidth:0,backgroundColor:'white', borderTopColor:"transparent",borderBottomColor:"transparent"}}
-    //             keyboardType = 'default'
-    //             clearIcon={{color:'grey'}}
-    //             //          value={this.state.value}
-    //             onSubmit={value => console.log(value, 'onSubmit')} 
-    //             //          onClear={()=>{dismissKeyboard(); this.setState({value: ''})}}
-    //             //          onChangeText={value => {this.setState({value})}}
-    //             />
-    //            <Icon 
-    //           name={'filter'} 
-    //           style = {{flex:1,justifyContent:"space-around",color :'grey'}}
-    //           size={24}/>
-    //         </View>
-    //       </View>
-
-          
-    //         <DropdownMenu
-    //           style={{flex: 1}}
-    //           bgColor={'white'}
-    //           tintColor={'#666666'}
-    //           activityTintColor={'green'}
-    //           // arrowImg={}      
-    //           // checkImage={}   
-    //           // optionTextStyle={{color: '#333333'}}
-    //           // titleStyle={{color: '#333333'}} 
-    //           // maxHeight={300} 
-    //           handler={(selection, row) => this.setState({text: data[selection][row]})}
-    //           data={data}
-    //         >
-    //         </DropdownMenu>
-    //       </View>
-    //       </TouchableWithoutFeedback>
-    //     )
-    //   }
-      
-    // }
-
   _menu = null;
  
   setMenuRef = ref => {
@@ -92,6 +118,8 @@ export default class SearchPage extends Component {
  
   render() {
     const {navigation} = this.props
+    // const data = this.state.data
+    // alert(data)
     return (
       // <TouchableWithoutFeedback style={styles.container} behavior="padding" onPress={()=>{dismissKeyboard()}}>
       <View style={{flex: 1}}>
@@ -127,11 +155,37 @@ export default class SearchPage extends Component {
 
        
       </View>
-      <CardList navigation={navigation}/>
+      <CardList navigation={navigation} data={this.state.data}/>
       </View>
       // </TouchableWithoutFeedback>
     );
   }
+
+  // render() {
+  //   return(
+  //             <TouchableWithoutFeedback behavior="padding" onPress={()=>{dismissKeyboard()}}>
+  //       <ScrollView>
+  //       <View style={styles.container}>
+  //       <FlatList
+  //         directionalLockEnabled={true}
+  //         ItemSeparatorComponent={ ()=> <View style={ { height:10,} } />}
+  //         data={this.state.eventArray}
+  //         renderItem={({item}) => <View>
+  //           <TouchableOpacity style={styles.container}
+  //                             onPress={() => {this.props.para.navigation.navigate('temp')}}>
+  //            <View>
+  //               <Text>{item.name}</Text>
+  //               <Text>{item.user}</Text>
+  //            </View>
+  //           </TouchableOpacity>
+  //           </View>
+  //       }
+  //       />
+  //       </View>
+  //       </ScrollView>
+  //     </TouchableWithoutFeedback>
+  //   )
+  // }
 }
 
 const styles = StyleSheet.create({

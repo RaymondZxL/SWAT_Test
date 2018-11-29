@@ -12,7 +12,7 @@ import Login from './src/Login'
 import MyEvents from './src/MyEvents'
 import ChangeProfile from './src/ChangeProfile'
 import EventDetail from './src/Event_detail'
-
+import CreateEvent from './src/CreateEvent'
 
 let screen = Dimensions.get('window');
 
@@ -27,6 +27,7 @@ const App = createStackNavigator({
   MyEvents: {screen: MyEvents},
   ChangeProfile: {screen: ChangeProfile},
   EventDetail: {screen: EventDetail},
+  CreateEvent: {screen: CreateEvent}
 });
 
 export default App;

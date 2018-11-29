@@ -87,8 +87,11 @@ export default class MyEvent extends Component{
         renderTabBar={()=><ScrollableTabBar tabStyle={{height:39}}/>}
       >
         <ScrollView tabLabel="Attending">
-          <CardList navigation={navigation}/>
+          {/* <CardList navigation={navigation}/> */}
         </ScrollView>
+        <ScrollView tabLabel="Favorite">
+          <View></View>
+        </ScrollView> 
         <ScrollView tabLabel="Hosting">
           <View></View>
         </ScrollView>
