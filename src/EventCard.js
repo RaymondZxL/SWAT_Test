@@ -21,7 +21,7 @@ export default class EventCard extends Component {
     //   likes,
     //   id
     // } = this.props.event
-    const {title, image, date, location} = this.props.data
+    const {eventName, image, date, location, key} = this.props.data
 
     return (
       <Card
@@ -30,7 +30,7 @@ export default class EventCard extends Component {
         imageProps={{resizeMode: 'stretch'}}
         imageStyle={{marginLeft:0, marginRight:0}}
       >
-        <Text style={{marginBottom:10, marginTop:5, fontSize:20, fontWeight: 'bold'}}>{title}</Text>
+        <Text style={{marginBottom:10, marginTop:5, fontSize:20, fontWeight: 'bold'}}>{eventName}</Text>
         <View style={{flexDirection: 'row'}}>
           <View style={{flexDirection: 'row', marginLeft: 0, marginBottom: 5}}>
             <Icon name='calendar' size={22}/>
@@ -49,7 +49,7 @@ export default class EventCard extends Component {
         <TouchableOpacity
 
           style={styles.button1}
-          onPress={()=>{this.props.navigation.navigate('EventDetail')}}
+          onPress={()=>{this.props.navigation.navigate('EventDetail', {data: this.props.data})}}
         >
           <Text style={styles.buttonText}>View Detail</Text>
         </TouchableOpacity>

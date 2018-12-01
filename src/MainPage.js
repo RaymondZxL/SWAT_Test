@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, FlatList,Text, TouchableWithoutFeedback, StyleSheet, View} from 'react-native';
+import {ScrollView, FlatList,Text, TouchableWithoutFeedback, StyleSheet, View,TouchableOpacity } from 'react-native';
 import {SearchBar} from 'react-native-elements'
 import {Dimensions, PixelRatio} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -27,7 +27,12 @@ export default class MainPage extends Component {
  componentDidMount(){ 
   // componentWillMount() {
     this.setup()
+    //this.refs.searchBar.focus();
   }
+
+ //componentDidMount() {
+  //this.refs.searchBar.focus();
+//}
   async setup() {
 // await setup() {
     //store all events into array
@@ -115,6 +120,50 @@ export default class MainPage extends Component {
   onButtonPress = () => {
     this.setState({ color: '#E3170D' }); 
   }
+
+  async info(){
+    //alert(this.state.value)
+    this.setState({eventArray:[]})
+    await firebase.database().ref('Events').once('value').then(function(snapshot){
+      snapshot.forEach(function(childSnapshot){
+        if (childSnapshot.key != "NumberOfEvents") {
+          // this.setState({event:childSnapshot.val().eventName})
+          if( childSnapshot.val().eventName.indexOf(this.state.value) !== -1 ){
+                    this.state.eventArray.push({
+                    // key: childSnapshot.val().key,
+                    key: childSnapshot.key,
+                    date:childSnapshot.val().date,
+                    description:childSnapshot.val().description,
+                    eventName:childSnapshot.val().eventName,
+                    location:childSnapshot.val().location,
+                    time:childSnapshot.val().time,
+                    user:childSnapshot.val().user,
+                    category:childSnapshot.val().category,
+                    favoriteArray:childSnapshot.val().favoriteArray,
+                    attending:childSnapshot.val().attending,
+                  })
+        }
+      }
+      }.bind(this))
+    }.bind(this))
+    //alert(this.state.eventArray)
+    this.state.eventArray.push({
+                    // key: childSnapshot.val().key,
+                    key: this.state.value,
+                    date:'',
+                    description:'',
+                    eventName:this.state.value,
+                    location:'',
+                    time:'',
+                    user:'',
+                    category:'',
+                    favoriteArray:'',
+                    attending:'',
+                  })
+    //alert(this.state.eventArray.length)
+    this.setState({value : ''})
+
+  }
  
   render() {
     const {navigation} = this.props
@@ -129,11 +178,16 @@ export default class MainPage extends Component {
                 // showLoading
                 placeholder="Search"
                 // platform = "ios"
+                platform="ios"
+                //cancelButtonTitle="Cancel"
                 containerStyle = {{height:screenHeight*0.06, width:screenWidth*0.9,borderWidth:0,backgroundColor:'white', borderTopColor:"transparent",borderBottomColor:"transparent"}}
                 keyboardType = 'default'
                 clearIcon={{color:'grey'}}
                 //          value={this.state.value}
                 onSubmit={value => console.log(value, 'onSubmit')} 
+                onChangeText={(value) => this.setState({ value })}
+                onSubmitEditing= {this.info.bind(this)}
+
                 //          onClear={()=>{dismissKeyboard(); this.setState({value: ''})}}
                 //          onChangeText={value => {this.setState({value})}}
         />
@@ -149,13 +203,10 @@ export default class MainPage extends Component {
             size={22}/>}
           >
           <MenuItem onPress={()=>{this.hideMenu(); this.setState({color:"grey"})}}>Sort by time</MenuItem>
-          <MenuItem onPress={()=>{this.hideMenu(); this.setState({color:"grey"})}}>Sort by distance</MenuItem>
           <MenuItem onPress={()=> {this.hideMenu(); this.setState({color:"grey"})}}>Sort by popularity</MenuItem>
         </Menu>
-
-       
       </View>
-      <CardList navigation={navigation} data={this.state.data}/>
+      <CardList navigation={navigation} data={this.state.eventArray}/>
       </View>
       // </TouchableWithoutFeedback>
     );

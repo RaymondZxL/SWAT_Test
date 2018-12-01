@@ -23,6 +23,7 @@ export default class Home extends Component {
         accountCreationDate: 0
       },
       selectedTab: 'home',
+      key: '',
     }
   }
 
@@ -45,7 +46,7 @@ export default class Home extends Component {
   //    alert(error.errorMessage);
   //    return;
   //  });
-   
+
   Logout(){
     var user = firebase.auth().currentUser;
     if(user){
@@ -55,6 +56,10 @@ export default class Home extends Component {
       alert("User not logged in!");
     }
 
+  onClickMyEvent(){
+    MyEvents.test();
+    this.setState({selectedTab: 'event'})
+  }
     // var i = 0;
     //   while(i <= 100000000/4){
     //     i++;

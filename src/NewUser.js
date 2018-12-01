@@ -56,7 +56,6 @@ export default class NewUser extends React.Component {
 		} else if (this.tag.totalSelected == 0) {
 			// alert(JSON.stringify(this.tag.itemsSelected));
 			alert('Please select at least one interest')
-			// alert(this.tag.itemsSelected.length)
 		} else {
 			await firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
 		      	var errorCode = error.code;
@@ -89,8 +88,10 @@ export default class NewUser extends React.Component {
 				email: this.state.email,
 				uid: user.uid,
 				ListOfEvents: [],
+				ListOfFavorite: [],
+				ListOfAttending: [],
 				numberOfEvents: 0,
-				interest:this.tag.itemsSelected
+				interest:JSON.stringify(this.tag.itemsSelected) 
 		}).then((data)=>{
 				//success callback
 				alert('Account Created!');
@@ -98,8 +99,7 @@ export default class NewUser extends React.Component {
 				console.log('data ' , data)
 		}).catch((error)=>{
 				//error callback
-				alert(error.errorMessage);
-				return;
+				console.log('error ' , error)
 		})
 		}
 	}
