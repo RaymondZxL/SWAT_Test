@@ -4,15 +4,17 @@ npm install
 
 npm install --save react-native-material-menu
 
-npm install —save react-native-elements
+npm install --save react-native-elements
 
-npm install —save react-native-responsive-image
+npm install --save react-native-responsive-image
 
-npm install —save react-native-tag-select
+npm install --save react-native-tag-select
 
-npm install —save react-native-scrollable-tab-view
+npm install --save react-native-scrollable-tab-view
 
-npm install —save react-native-datepicker
+npm install --save react-native-datepicker
+
+npm install --save react-native-search-bar
 
 yarn add react-native-image-picker
 
