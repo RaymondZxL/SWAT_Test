@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import {ScrollView, FlatList,Text, TouchableWithoutFeedback, StyleSheet, View,TouchableOpacity } from 'react-native';
-import {SearchBar} from 'react-native-elements'
+import SearchBar from 'react-native-search-bar'
 import {Dimensions, PixelRatio} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import Menu, {MenuItem,MenuDivider} from 'react-native-material-menu';
 import CardList from '../src/CardList';
 import firebase from 'react-native-firebase';
+
+import MyEvents from '../src/MyEvents';
 
 const dismissKeyboard = require('dismissKeyboard')
 const screenWidth = Dimensions.get('window').width;
@@ -20,11 +22,20 @@ export default class MainPage extends Component {
       color: 'grey',
       data: [],
       eventArray: [],
+      sortByTime: 0,
+      sortByPop: 0,
+      Timebuffer: [],
+      Popbuffer: [],
+      temp: [],
     };
     // setup = this.setup.bind(this)
     // this.setup()
   }
- componentDidMount(){ 
+
+  componentWillReceiveProps() {
+    this.setup()
+  }
+ componentWillMount(){ 
   // componentWillMount() {
     this.setup()
     //this.refs.searchBar.focus();
@@ -36,11 +47,14 @@ export default class MainPage extends Component {
   async setup() {
 // await setup() {
     //store all events into array
+    eventArray = []
+    Timebuffer = []
+    Popbuffer = []
     await firebase.database().ref('Events').once('value').then(function(snapshot){
       snapshot.forEach(function(childSnapshot){
         if (childSnapshot.key != "NumberOfEvents") {
           // this.setState({event:childSnapshot.val().eventName})
-          this.state.eventArray.push({
+          eventArray.push({
             // key: childSnapshot.val().key,
             key: childSnapshot.key,
             date:childSnapshot.val().date,
@@ -51,56 +65,59 @@ export default class MainPage extends Component {
             user:childSnapshot.val().user,
             category:childSnapshot.val().category,
             favoriteArray:childSnapshot.val().favoriteArray,
+            favoriteNum: childSnapshot.val().favoriteNum,
             attending:childSnapshot.val().attending,
           })
         }
-      }.bind(this))
-    }.bind(this))
+      })
+    })
+    await firebase.database().ref('Events').orderByChild('date').once('value').then(function(snapshot){
+      snapshot.forEach(function(childSnapshot){
+        if (childSnapshot.key != "NumberOfEvents") {
+          // this.setState({event:childSnapshot.val().eventName})
+          Timebuffer.push({
+            // key: childSnapshot.val().key,
+            key: childSnapshot.key,
+            date:childSnapshot.val().date,
+            description:childSnapshot.val().description,
+            eventName:childSnapshot.val().eventName,
+            location:childSnapshot.val().location,
+            time:childSnapshot.val().time,
+            user:childSnapshot.val().user,
+            category:childSnapshot.val().category,
+            favoriteArray:childSnapshot.val().favoriteArray,
+            favoriteNum: childSnapshot.val().favoriteNum,
+            attending:childSnapshot.val().attending,
+          })
+        }
+      })
+    })
+    await firebase.database().ref('Events').orderByChild('favoriteNum').once('value').then(function(snapshot){
+      snapshot.forEach(function(childSnapshot){
+        if (childSnapshot.key != "NumberOfEvents") {
+          // this.setState({event:childSnapshot.val().eventName})
+          Popbuffer.push({
+            // key: childSnapshot.val().key,
+            key: childSnapshot.key,
+            date:childSnapshot.val().date,
+            description:childSnapshot.val().description,
+            eventName:childSnapshot.val().eventName,
+            location:childSnapshot.val().location,
+            time:childSnapshot.val().time,
+            user:childSnapshot.val().user,
+            category:childSnapshot.val().category,
+            favoriteArray:childSnapshot.val().favoriteArray,
+            favoriteNum: childSnapshot.val().favoriteNum,
+            attending:childSnapshot.val().attending,
+          })
+        }
+      })
+    })
     // alert(this.state.eventArray)
     console.log(this.state.eventArray)
-
-    var user = firebase.auth().currentUser;
-    if (user != null) {
-      interest = null
-      // alert(user.email)
-      // alert(user.uid)
-      await firebase.database().ref('Users/').child(user.uid).once('value').then(function(snapshot){
-        interest = snapshot.val().interest;
-        for (var i = 0; i < interest.length; i++) {
-          var cat = interest[i]
-          // console.log(cat)
-          eventArray = this.state.eventArray
-        
-          for(var j = 0; j < eventArray.length; j++) {
-            var event = eventArray[j]
-            // console.log(event)
-            // data = this.state.data
-            var eventCat = event.category
-            // console.log(eventCat)
-            if (eventCat && !this.state.data.includes(event)){
-              for (var p = 0; p < eventCat.length; p++) {
-                if (eventCat[p].id == cat.id)
-                  this.state.data.push(event)
-              }  
-            }
-            // if (!this.state.data.includes(event)) {
-            //   eventCat = event.category
-            //   console.log(eventCat)
-            //   if (eventCat && eventCat.includes(cat))
-            //     this.state.data.push(event)
-            // }
-          }
-
-        }
-        // alert(this.state.data)
-        // console.log(this.state.data)
-
-      }.bind(this))
-      // .catch((error)=> {
-      //   alert(error.errorMessage)
-      // })
-     
-    }
+    this.setState({eventArray: eventArray})
+    this.setState({Timebuffer: Timebuffer})
+    this.setState({Popbuffer: Popbuffer})
   }
   
   _menu = null;
@@ -124,47 +141,178 @@ export default class MainPage extends Component {
   async info(){
     //alert(this.state.value)
     this.setState({eventArray:[]})
-    await firebase.database().ref('Events').once('value').then(function(snapshot){
-      snapshot.forEach(function(childSnapshot){
-        if (childSnapshot.key != "NumberOfEvents") {
-          // this.setState({event:childSnapshot.val().eventName})
-          if( childSnapshot.val().eventName.indexOf(this.state.value) !== -1 ){
-                    this.state.eventArray.push({
-                    // key: childSnapshot.val().key,
-                    key: childSnapshot.key,
-                    date:childSnapshot.val().date,
-                    description:childSnapshot.val().description,
-                    eventName:childSnapshot.val().eventName,
-                    location:childSnapshot.val().location,
-                    time:childSnapshot.val().time,
-                    user:childSnapshot.val().user,
-                    category:childSnapshot.val().category,
-                    favoriteArray:childSnapshot.val().favoriteArray,
-                    attending:childSnapshot.val().attending,
-                  })
+    this.setState({Timebuffer:[]})
+    this.setState({Popbuffer:[]})
+    await firebase.database().ref('Events').orderByChild('date').once('value').then(function(snapshot){
+        snapshot.forEach(function(childSnapshot){
+          if (childSnapshot.key != "NumberOfEvents") {
+            // this.setState({event:childSnapshot.val().eventName})
+            var eventNameInclude = false;
+            var descriptionInclude = false;
+            var tagInclude = false;
+  
+            eventNameInclude = childSnapshot.val().eventName.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()) !== -1 ? true : false;
+            descriptionInclude = childSnapshot.val().description.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()) !== -1 ? true : false;
+            for(var i = 0; i < childSnapshot.val().category.length; i++){
+              //alert(childSnapshot.val().category[i].label.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()));
+              if((childSnapshot.val().category[i].label.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()) !== -1)){
+                tagInclude = true;
+                break;
+              }else{
+                tagInclude = false;
+              }
+            }
+            if(tagInclude || eventNameInclude || descriptionInclude){
+                      this.state.Timebuffer.push({
+                      // key: childSnapshot.val().key,
+                      key: childSnapshot.key,
+                      date:childSnapshot.val().date,
+                      description:childSnapshot.val().description,
+                      eventName:childSnapshot.val().eventName,
+                      location:childSnapshot.val().location,
+                      time:childSnapshot.val().time,
+                      user:childSnapshot.val().user,
+                      category:childSnapshot.val().category,
+                      favoriteArray:childSnapshot.val().favoriteArray,
+                      favoriteNum: childSnapshot.val().favoriteNum,
+                      attending:childSnapshot.val().attending,
+                    })
+                    //alert(childSnapshot.val().category);
+              }
         }
-      }
+        }.bind(this))
       }.bind(this))
-    }.bind(this))
+      await firebase.database().ref('Events').orderByChild('favoriteNum').once('value').then(function(snapshot){
+          snapshot.forEach(function(childSnapshot){
+            if (childSnapshot.key != "NumberOfEvents") {
+              // this.setState({event:childSnapshot.val().eventName})
+              var eventNameInclude = false;
+              var descriptionInclude = false;
+              var tagInclude = false;
+    
+              eventNameInclude = childSnapshot.val().eventName.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()) !== -1 ? true : false;
+              descriptionInclude = childSnapshot.val().description.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()) !== -1 ? true : false;
+              for(var i = 0; i < childSnapshot.val().category.length; i++){
+                //alert(childSnapshot.val().category[i].label.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()));
+                if((childSnapshot.val().category[i].label.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()) !== -1)){
+                  tagInclude = true;
+                  break;
+                }else{
+                  tagInclude = false;
+                }
+              }
+              if(tagInclude || eventNameInclude || descriptionInclude){
+                        this.state.Popbuffer.push({
+                        // key: childSnapshot.val().key,
+                        key: childSnapshot.key,
+                        date:childSnapshot.val().date,
+                        description:childSnapshot.val().description,
+                        eventName:childSnapshot.val().eventName,
+                        location:childSnapshot.val().location,
+                        time:childSnapshot.val().time,
+                        user:childSnapshot.val().user,
+                        category:childSnapshot.val().category,
+                        favoriteArray:childSnapshot.val().favoriteArray,
+                        favoriteNum: childSnapshot.val().favoriteNum,
+                        attending:childSnapshot.val().attending,
+                      })
+                      //alert(childSnapshot.val().category);
+                }
+          }
+          }.bind(this))
+        }.bind(this))
+      await firebase.database().ref('Events').once('value').then(function(snapshot){
+          snapshot.forEach(function(childSnapshot){
+            if (childSnapshot.key != "NumberOfEvents") {
+              // this.setState({event:childSnapshot.val().eventName})
+              var eventNameInclude = false;
+              var descriptionInclude = false;
+              var tagInclude = false;
+    
+              eventNameInclude = childSnapshot.val().eventName.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()) !== -1 ? true : false;
+              descriptionInclude = childSnapshot.val().description.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()) !== -1 ? true : false;
+              for(var i = 0; i < childSnapshot.val().category.length; i++){
+                //alert(childSnapshot.val().category[i].label.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()));
+                if((childSnapshot.val().category[i].label.toString().toLowerCase().indexOf(this.state.value.toString().toLowerCase()) !== -1)){
+                  tagInclude = true;
+                  break;
+                }else{
+                  tagInclude = false;
+                }
+              }
+              if(tagInclude || eventNameInclude || descriptionInclude){
+                        this.state.eventArray.push({
+                        // key: childSnapshot.val().key,
+                        key: childSnapshot.key,
+                        date:childSnapshot.val().date,
+                        description:childSnapshot.val().description,
+                        eventName:childSnapshot.val().eventName,
+                        location:childSnapshot.val().location,
+                        time:childSnapshot.val().time,
+                        user:childSnapshot.val().user,
+                        category:childSnapshot.val().category,
+                        favoriteArray:childSnapshot.val().favoriteArray,
+                        favoriteNum: childSnapshot.val().favoriteNum,
+                        attending:childSnapshot.val().attending,
+                      })
+                      //alert(childSnapshot.val().category);
+                }
+          }
+          }.bind(this))
+        }.bind(this))
     //alert(this.state.eventArray)
-    this.state.eventArray.push({
-                    // key: childSnapshot.val().key,
-                    key: this.state.value,
-                    date:'',
-                    description:'',
-                    eventName:this.state.value,
-                    location:'',
-                    time:'',
-                    user:'',
-                    category:'',
-                    favoriteArray:'',
-                    attending:'',
-                  })
+    // this.state.eventArray.push({
+    //                 // key: childSnapshot.val().key,
+    //                 key: this.state.value,
+    //                 date:'',
+    //                 description:'',
+    //                 eventName:this.state.value,
+    //                 location:'',
+    //                 time:'',
+    //                 user:'',
+    //                 category:'',
+    //                 favoriteArray:'',
+    //                 attending:'',
+    //                 favoriteNum: -1,
+    //               })
+    //     this.state.Popbuffer.push({
+    //                 // key: childSnapshot.val().key,
+    //                 key: this.state.value,
+    //                 date:'',
+    //                 description:'',
+    //                 eventName:this.state.value,
+    //                 location:'',
+    //                 time:'',
+    //                 user:'',
+    //                 category:'',
+    //                 favoriteArray:'',
+    //                 attending:'',
+    //                 favoriteNum: 0,
+    //               })
+    //         this.state.Timebuffer.push({
+    //                 // key: childSnapshot.val().key,
+    //                 key: this.state.value,
+    //                 date:'',
+    //                 description:'',
+    //                 eventName:this.state.value,
+    //                 location:'',
+    //                 time:'2020-12-31',
+    //                 user:'',
+    //                 category:'',
+    //                 favoriteArray:'',
+    //                 attending:'',
+    //                 favoriteNum: -1,
+    //               })
     //alert(this.state.eventArray.length)
-    this.setState({value : ''})
+    this.setState({value : this.state.value});
 
   }
- 
+
+  handleOnNavigateBack=() => {
+    this.setup();
+    
+  }
+
   render() {
     const {navigation} = this.props
     // const data = this.state.data
@@ -202,11 +350,11 @@ export default class MainPage extends Component {
 
             size={22}/>}
           >
-          <MenuItem onPress={()=>{this.hideMenu(); this.setState({color:"grey"})}}>Sort by time</MenuItem>
-          <MenuItem onPress={()=> {this.hideMenu(); this.setState({color:"grey"})}}>Sort by popularity</MenuItem>
+          <MenuItem onPress={()=> {this.hideMenu(); this.setState({color:"grey", eventArray: this.state.Timebuffer})}}>Sort by time</MenuItem>
+          <MenuItem onPress={()=> {this.hideMenu(); this.setState({color:"grey", eventArray: this.state.Popbuffer.reverse()})}}>Sort by popularity</MenuItem>
         </Menu>
       </View>
-      <CardList navigation={navigation} data={this.state.eventArray}/>
+      <CardList navigation={navigation} data={this.state.eventArray} handleOnNavigateBack={this.handleOnNavigateBack}/>
       </View>
       // </TouchableWithoutFeedback>
     );

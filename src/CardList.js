@@ -1,33 +1,31 @@
 import React, {Component} from 'react';
 import {View, FlatList} from 'react-native';
 import EventCard from '../src/EventCard';
-import Styles from './Styles';
-import firebase from 'react-native-firebase';
-//var data = [{key: '0', title: 'SDHacks', image:'../assets/SDHacks.jpg', date: '2018', location: 'pc'}]
- /*var data = [{key: '0', title: 'SDHacks', image: '../assets/SDHacks.jpg', date: '2018', location: 'pc'},
-             {key: '1', title: 'midterm', image: '../assets/SDHacks.jpg', date: '2017', location: 'home'},
-          {key: '2', title: 'writing code', image: '../assets/SDHacks.jpg', date: '2020', location: 'universal'}]*/
+
 export default class CardList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
     }
     
   }
 
-  
-
   renderItemView({item, index}) {
     const {navigation}=this.props
+    const {hosting} =this.props
     return (
-      <EventCard data={item} navigation={navigation}/>
+      <EventCard hh = {new Date()} data={item} index={index} navigation={navigation} hosting={hosting} handleOnNavigateBack={this.props.handleOnNavigateBack}/>
     )
   }
   render() {
+    const {data} = this.props
+    // alert(data)
     return (
       <View style={{flex:1, backgroundColor: 'white'}}>
         <FlatList
-            data={this.props.data}
+            data={data}
+            // hosting={hosting}
             renderItem={this.renderItemView.bind(this)}/>
       </View>
     )

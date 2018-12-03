@@ -1,60 +1,94 @@
-import React, {Component} from 'react';
-import {Card, ListItem, Text} from 'react-native-elements'
-import {TouchableOpacity, View, Button} from 'react-native'
-import Icon from 'react-native-vector-icons/EvilIcons';
-import styles from './Styles'
+import React, { Component } from 'react';
+import { Card, Text } from 'react-native-elements';
+import { TouchableOpacity, View, Button } from 'react-native';
+import Icon1 from 'react-native-vector-icons/Ionicons';
+import firebase from 'react-native-firebase';
 
 export default class EventCard extends Component {
-
   constructor(props) {
     super(props);
-    this.state={}
-  } 
+    this.state={
+      favoriteNum: 0
+    }
+  }
+
+  componentWillReceiveProps() {
+    this.componentWillMount()
+  }
+  async componentWillMount() {
+    await firebase.database().ref('Events/').child(this.props.data.key).once('value', function(snapshot){
+        this.setState({favoriteNum: snapshot.val().favoriteNum})
+    }.bind(this))
+    // console.log(this.)
+  }
+
   render() {
-    // const {
-    //   name,name
-    //   location,
-    //   description,
-    //   date,
-    //   time,
-    //   image,
-    //   likes,
-    //   id
-    // } = this.props.event
-    const {eventName, image, date, location, key} = this.props.data
+    const {key, eventName, time, location} = this.props.data;
+    let changeColor = this.props.index;
 
+    date= this.props.data.date
+    if (!date) {
+      date="2018-11-10"
+    }
+    var s = date.split('-');
+    let outStr = "";
+    if (s[1] == "01")
+      outStr = "JAN";
+    else if (s[1] == "02")
+      outStr = "FEB";
+    else if (s[1] == "03")
+      outStr = "MAR";
+    else if (s[1] == "04")
+      outStr = "APR";
+    else if (s[1] == "05")
+      outStr = "MAY";
+    else if (s[1] == "06")
+      outStr = "JUN";
+    else if (s[1] == "07")
+      outStr = "JUL";
+    else if (s[1] == "08")
+      outStr = "AUG";
+    else if (s[1] == "09")
+      outStr = "SEP";
+    else if (s[1] == "10")
+      outStr = "OCT";
+    else if (s[1] == "11")
+      outStr = "NOV";
+    else 
+      outStr = "DEC";
+    
     return (
-      <Card
-        image={require('../assets/SDHacks.jpg')}
-        // image={require({image})}
-        imageProps={{resizeMode: 'stretch'}}
-        imageStyle={{marginLeft:0, marginRight:0}}
+      <TouchableOpacity 
+        // onPress={()=>{this.props.navigation.navigate('EventDetail')}}>
+        onPress={()=>{this.props.hosting?
+          this.props.navigation.navigate('EventDetail_Host', {onNavigateBack: this.props.handleOnNavigateBack, data: this.props.data}):
+          this.props.navigation.navigate('EventDetail', {onNavigateBack: this.props.handleOnNavigateBack,data: this.props.data})}}
       >
-        <Text style={{marginBottom:10, marginTop:5, fontSize:20, fontWeight: 'bold'}}>{eventName}</Text>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{flexDirection: 'row', marginLeft: 0, marginBottom: 5}}>
-            <Icon name='calendar' size={22}/>
-            <Text style={{fontSize: 15}}>{date}</Text>
-          </View> 
-          <View style={{flexDirection: 'row', marginLeft: 20, marginBottom: 5}}>
-            <Icon name='location' size={22}/>
-            <Text style={{fontSize: 15}}>{location}</Text>
+        <Card flexDirection='row' containerStyle={{padding: 0, height: 100}}>
+          <View>
+            <View style={{backgroundColor: changeColor%2 == 0 ? '#cc0f0f' : '#060719', opacity: 0.7, height: 100, width: 100, justifyContent: 'center', alignItems: 'center'}}>
+              <Text style={{color: 'white', fontSize: 40}}>{s[2]}</Text>
+              <Text style={{color: 'white', fontWeight: 'bold', fontSize: 25}}>{outStr}</Text>
+            </View>
           </View>
-        </View>
-        {/* <View style={{flexDirection: 'row', marginLeft: 0, marginBottom: 5}}>
-          <Icon name='user' size={22}/>
-          <Text style={{fontSize: 15}}>Organization</Text>
-        </View>  */}
-        {/* <Text style={{marginBottom: 10}}>SDHACK GOOD</Text> */}
-        <TouchableOpacity
 
-          style={styles.button1}
-          onPress={()=>{this.props.navigation.navigate('EventDetail', {data: this.props.data})}}
-        >
-          <Text style={styles.buttonText}>View Detail</Text>
-        </TouchableOpacity>
+          <View style={{marginTop: 10, marginLeft: 10, width: 190, flexWrap: 'wrap'}}>
+            <Text style={{fontWeight: 'bold'}}>{eventName}</Text>
+            <Text>Time @ {time}</Text>
+            <Text>Location @ {location}</Text>
+          </View>
 
-     </Card>
+         <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Icon1
+                name={"md-heart"}
+                size={30}
+                style={{left: 8, marginTop: 15}}
+                color='#cc0f0f'
+              />
+              <Text style={{color: '#cc0f0f', marginLeft: 16}}>{this.state.favoriteNum}</Text>
+          </View> 
+        </Card>
+      </TouchableOpacity>
     )
   }
 }

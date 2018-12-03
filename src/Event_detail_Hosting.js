@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TouchableOpacity, TextInput,TouchableHighlight, View, Stylesheet, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator,NavigationActions  } from 'react-navigation';
 import DatePicker from 'react-native-datepicker'
 import ResponsiveImage from 'react-native-responsive-image';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Icon1 from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/AntDesign';
 import firebase from 'react-native-firebase';
 
 import styles from '../src/Styles'
+import MyEvents from '../src/MyEvents'
 
-export default class EventDetail extends Component{
+var temp = require('../src/MyEvents');
+// import firebase from '../src/firebase'
+
+export default class EventDetail_Host extends Component{
   constructor(props) {
     super(props);
-    this.superData=this.props.navigation.getParam('data', 'None')
+    this.superData = this.props.navigation.getParam('data', 'None');
+    // this.handleOnNavigateBack=this.props.navigation.getParam('onNavigateBack', 'None')
     this.state = {
       email: '',
       interest: '',
@@ -35,13 +41,16 @@ export default class EventDetail extends Component{
       favoriteNum: '',
       liked: '',
     }
-  }
+  } 
 
-  static navigationOptions={
+  static navigationOptions = {
     title: 'Event Detail',
-    headerLeft: null
-  }
- async componentWillMount(){
+    headerLeft:null,
+  };
+
+  handleOnNavigateBack=() => {this.componentWillMount()}
+  
+  async componentWillMount(){
     var data = this.props.navigation.getParam('data', 'None');
     var uid = firebase.auth().currentUser.uid;
     await firebase.database().ref('Events/').child(data.key).once('value', function(snapshot){
@@ -82,147 +91,77 @@ export default class EventDetail extends Component{
     }
   }
 
-  onSubmit(){
-    //alert(MyEvents)
-    //this.props.navigation.navigate('MyEvents');
+  deleteEvent() {
+    firebase.database().ref('Events/').child(this.superData.key).remove()
+    // this.props.navigation.navigate('Home')
+    // this.props.navigation.reset([NavigationActions.navigate({routeName: 'Home'})], 0)
+    this.props.navigation.reset([NavigationActions.navigate({routeName: 'Home'})], 0)
   }
 
-
-  async onSubmit_like(){
-    var data = this.props.navigation.getParam('data', 'None');
-    var uid = firebase.auth().currentUser.uid;
-
-    if(this.state.value_color2 === 'grey'){
-      this.state.buffer.push(data.key);
-      this.state.favoriteNum += 1;
-    }else{
-      var i = this.state.buffer.indexOf(data.key);
-      var removedItem = this.state.buffer.splice(i, 1);
-      this.state.favoriteNum -= 1;
-    }
-    
-    await firebase.database().ref('Events/').child(data.key).set({
-      user: this.state.user,
-      time: this.state.time,
-      eventName: this.state.eventName,
-      description: this.state.description,
-      location: this.state.location,
-      date: this.state.date,
-      category: this.state.buffer_cata,
-      favoriteNum: this.state.favoriteNum,
-    });
-
-    await firebase.database().ref('Users/').child(uid).set({
-      email: this.state.email,
-      interest: this.state.interest,
-      uid: this.state.uid,
-      name: this.state.name,
-      numberOfEvents: this.state.numberOfEvents,
-      ListOfFavorite: this.state.buffer,
-      ListOfAttending: this.state.buffer_2,
-    }).then((data)=>{
-        //success callback
-        console.log('data ' , data)
-    }).catch((error)=>{
-        //error callback
-        console.log('error ' , error)
-    });
-    this.state.value_color2 === 'grey' ? this.setState({value_color2:"#E3170D"}): this.setState({value_color2:'grey'})
-  }
-
-  async onSubmit_attend(){
-    var data = this.props.navigation.getParam('data', 'None');
-    var uid = firebase.auth().currentUser.uid;
-
-    if(this.state.value_color1 === 'grey'){
-      this.state.buffer_2.push(data.key);
-    }else{
-      var i = this.state.buffer_2.indexOf(data.key);
-      var removedItem = this.state.buffer_2.splice(i, 1);
-    }
-
-    await firebase.database().ref('Users/').child(uid).set({
-      email: this.state.email,
-      interest: this.state.interest,
-      uid: this.state.uid,
-      name: this.state.name,
-      numberOfEvents: this.state.numberOfEvents,
-      ListOfFavorite: this.state.buffer,
-      ListOfAttending: this.state.buffer_2,
-    }).then((data)=>{
-        //success callback
-        console.log('data ' , data)
-    }).catch((error)=>{
-        //error callback
-        console.log('error ' , error)
-    });
-    this.state.value_color1 === 'grey' ? this.setState({value_color1:"#E3170D"}): this.setState({value_color1:'grey'})
-  }
+  // handleOnNavigateBack=()=>{this.componentWillMount()}
   render(){
     return(
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <ScrollView>
           <View style={{flex:1, backgroundColor: '#fff',flexDirection: 'column', alignItems: 'center',justifyContent: 'center',marginLeft:30,marginRight:30}}>
+  
+
             <ResponsiveImage style = {{height:100,width:150,margin:20}} source={require('../assets/event.jpg')}/>
             <View style={styles.contaierRow}>
               <Text style={styles.textBox}>Title:</Text>
-              <Text style= {styles.contents}>{this.superData.eventName}</Text>
+              <Text style= {styles.contents}>{this.state.eventName}</Text>
         
               <Text style={styles.textBox}>Description:</Text>
-              <Text style= {styles.contents}>{this.superData.description}</Text>
+              <Text style= {styles.contents}>{this.state.description}</Text>
         
               <Text style={styles.textBox}>Date:</Text>
               <View style={{ flexDirection:"row",justifyContent:"center",alignItems:"center",marginBottom:30}}>
                 <Icon name = {"calendar"} size={26} color = {"#E3170D"} style = {{flex:1}}/>
                 <Text style = {{fontFamily: 'Avenir', fontSize: 18, alignItems:'center', justifyContent: 'center', flex:6}}>
-                  {this.superData.date}
+                  {this.state.date}
                 </Text>
               </View>
         
               <Text style={styles.textBox}>Time:</Text>
               <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",marginBottom:30}}>
                 <Icon name = {"clock"} size={26} color = {"#E3170D"} style = {{flex:1}}/>
-                <Text style = {{fontFamily: 'Avenir', fontSize:18, alignItems: 'center', justifyContent: 'center', flex:6}}>{this.superData.time}</Text>
+                <Text style = {{fontFamily: 'Avenir', fontSize:18, alignItems: 'center', justifyContent: 'center',  flex:6}}>{this.state.time}</Text>
               </View>
         
               <Text style={styles.textBox}>Location:</Text>
               <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",marginBottom:30}}>
                 <Icon name = {"location"} size={26} color = {"#E3170D"} style = {{flex:1}}/>
-                <Text style = {{fontFamily: 'Avenir', fontSize:18, alignItems: 'center', justifyContent: 'center', flex:6}}>{this.superData.location}</Text>
+                <Text style = {{fontFamily: 'Avenir', fontSize:18, alignItems: 'center', justifyContent: 'center',  flex:6}}>{this.state.location}</Text>
               </View>
 
             </View>
           </View>
-        </ScrollView>
-        {/* <Icon1
-          color = {this.state.value_color1}
-          // onPress = {()=> {this.state.value_color1 === 'grey' ? this.setState({value_color1:"#E3170D"}): this.setState({value_color1:'grey'})}}
-          onPress = {this.onSumbit_attend.bind(this)}
-          name={"md-checkbox"} 
-          size={35}
-          style = {{position: "absolute",bottom:30,right:20}}/> */}
-        <View style = {{position:'absolute',bottom:50,right:30}}>
-        <Button color = {this.state.value_color1}
-                title  = {'RSVP'}
-                buttonStyle = {{backgroundColor: "rgba(92, 99,216, 1)"}}
-                onPress={this.onSubmit_attend.bind(this)}
-                >
-        
-        </Button>
-        </View>  
-        <Icon1 
-          color = {this.state.value_color2}
-          // onPress = {()=> {this.state.value_color2 === 'grey' ? this.setState({value_color2:"#E3170D"}): this.setState({value_color2:'grey'})}}
-          onPress={this.onSubmit_like.bind(this)}
-          name={"md-heart"} 
-          size={35}
+        </ScrollView> 
+        <Icon1
+          color = {'gray'}
+          onPress = {()=> {this.deleteEvent()}}
+          name={"ios-trash"} 
+          size={30}
+          style = {{position: "absolute",bottom:50,right:40}}/>
+        <Icon2
+          color = {'gray'}
+          onPress = {()=> {
+                          this.props.navigation.navigate('ModifyEvent', {onNavigateBack: this.handleOnNavigateBack, data: this.superData})}}
+          name={"edit"} 
+          size={30}
           style = {{position: "absolute",bottom:50,right:100}}/>
+        {/*<TouchableOpacity
+          style={styles.button1}
+          onPress={this.onSubmit.bind(this)}
+          >
+          <Text style={styles.buttonText}> Save </Text>
+        </TouchableOpacity>*/}
         <Icon1
           color={'gray'}
           name={"ios-arrow-back"}
           size={35}
-          onPress={()=>{this.props.navigation.state.params.onNavigateBack();
-            this.props.navigation.goBack()}}
+          // onPress={()=>{this.props.navigation.navigate.navigate('Home')}}
+          onPress={() =>{this.props.navigation.state.params.onNavigateBack();this.props.navigation.goBack()}}
           style = {{position: "absolute",bottom:50,left:50}}
         />
       </KeyboardAvoidingView>

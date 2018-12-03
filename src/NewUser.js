@@ -21,6 +21,8 @@ const data = [
     { id: 10, label: 'Other'},
 ];
 
+//const {app} = firebase.storage();
+
 export default class NewUser extends React.Component {
 	constructor(props) {
 		super(props);
@@ -91,7 +93,7 @@ export default class NewUser extends React.Component {
 				ListOfFavorite: [],
 				ListOfAttending: [],
 				numberOfEvents: 0,
-				interest:JSON.stringify(this.tag.itemsSelected) 
+				interest:this.tag.itemsSelected,
 		}).then((data)=>{
 				//success callback
 				alert('Account Created!');

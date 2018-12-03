@@ -55,26 +55,9 @@ export default class Home extends Component {
     }else{
       alert("User not logged in!");
     }
-
-  onClickMyEvent(){
-    MyEvents.test();
-    this.setState({selectedTab: 'event'})
-  }
-    // var i = 0;
-    //   while(i <= 100000000/4){
-    //     i++;
-    // }
-
-    // user = firebase.auth().currentUser;
-    // if (user) {
-    //   firebase.auth().signOut().then(function(){
-    //     this.props.navigation.navigate('Main');
-    //   },function(error){
-    //     alert("User not log in!")
-    //   });
-    // }
   }
 
+  // handleOnNavigateBack = ()=> {this.render()}
   render(){
     handleToChangeSelectedTab = this.handleToChangeSelectedTab
     const {navigation} = this.props
@@ -88,7 +71,7 @@ export default class Home extends Component {
         renderSelectedIcon={() => <Icon name={'md-home'} size={22} color={'#E3170D'}/>}
         onPress={() => this.setState({selectedTab: 'home'})}
       >
-      <MainPage navigation={navigation}/>
+      <MainPage navigation={navigation} hh={new Date()}/>
       </TabNavigator.Item>
       <TabNavigator.Item
           title="MyEvent"
@@ -98,7 +81,7 @@ export default class Home extends Component {
           renderSelectedIcon={()=> <Icon name={'md-calendar'} size={22} color={'#E3170D'}/>}
           onPress={()=>this.setState({selectedTab: 'event'})}
         >
-        <MyEvents para={this.props}/>
+        <MyEvents navigation={navigation} hh={new Date()}/>
         {/* <MyEvents {...this.props}/> */}
       </TabNavigator.Item>
       <TabNavigator.Item
@@ -109,7 +92,7 @@ export default class Home extends Component {
         renderSelectedIcon={()=> <Icon name={'ios-add-circle-outline'} size={22} color={'#E3170D'}/>}
         onPress={()=>this.setState({selectedTab: 'create'})}
       >
-        <CreateEvent handleToChangeSelectedTab= {handleToChangeSelectedTab.bind(this)} {...this.props}/>
+        <CreateEvent navigation={navigation}/>
       </TabNavigator.Item>
       <TabNavigator.Item
         title="Profile"
@@ -120,7 +103,7 @@ export default class Home extends Component {
         onPress={()=> this.setState({selectedTab: 'profile'})}
         >
         <View style={styles.container}>
-        <Profile para={this.props}/>
+        <Profile navigation={navigation}/>
         <TouchableOpacity
         style={styles.button1}
         onPress={this.Logout.bind(this)}
