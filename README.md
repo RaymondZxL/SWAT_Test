@@ -14,8 +14,6 @@ npm install --save react-native-scrollable-tab-view
 
 npm install --save react-native-datepicker
 
-npm install --save react-native-search-bar
-
 yarn add react-native-image-picker
 
 react-native link react-native-image-picker
