@@ -15,6 +15,8 @@
     "react-native-material-menu": "^0.4.2",
     "react-native-responsive-image": "^2.3.1",
     "react-native-scrollable-tab-view": "^0.10.0",
+    "react-native-search-bar": "^3.4.2",
+    "react-native-searchbar": "^1.15.0",
     "react-native-tab-navigator": "^0.3.4",
     "react-native-tag-select": "^2.0.0",
     "react-native-vector-icons": "^6.1.0",

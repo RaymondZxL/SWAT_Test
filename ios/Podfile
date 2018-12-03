@@ -12,5 +12,7 @@ target 'SWAT2' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'ReactNativeSearchBar', :path => '../node_modules/react-native-search-bar'
+
 end
 

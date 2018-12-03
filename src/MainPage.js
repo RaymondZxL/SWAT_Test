@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {ScrollView, FlatList,Text, TouchableWithoutFeedback, StyleSheet, View,TouchableOpacity } from 'react-native';
-import SearchBar from 'react-native-search-bar'
+import {SearchBar} from 'react-native-elements'
 import {Dimensions, PixelRatio} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import Menu, {MenuItem,MenuDivider} from 'react-native-material-menu';
 import CardList from '../src/CardList';
 import firebase from 'react-native-firebase';
-
-import MyEvents from '../src/MyEvents';
 
 const dismissKeyboard = require('dismissKeyboard')
 const screenWidth = Dimensions.get('window').width;
@@ -327,16 +325,17 @@ export default class MainPage extends Component {
                 placeholder="Search"
                 // platform = "ios"
                 platform="ios"
-                //cancelButtonTitle="Cancel"
-                containerStyle = {{height:screenHeight*0.06, width:screenWidth*0.9,borderWidth:0,backgroundColor:'white', borderTopColor:"transparent",borderBottomColor:"transparent"}}
+                // containerStyle = {{ width:screenWidth*0.9,borderWidth:0,backgroundColor:'white', borderTopColor:"transparent",borderBottomColor:"transparent"}}
+                containerStyle = {{height:screenHeight*0.065, width:screenWidth*0.9,borderWidth:0,backgroundColor:'white', borderTopColor:"transparent",borderBottomColor:"transparent"}}
                 keyboardType = 'default'
-                clearIcon={{color:'grey'}}
-                //          value={this.state.value}
+                clearIcon={{color:'gray'}}
+                //          value={thi.state.value}
+                cancelButtonProps={{color: 'grey',borderWidth: 0}}
                 onSubmit={value => console.log(value, 'onSubmit')} 
                 onChangeText={(value) => this.setState({ value })}
                 onSubmitEditing= {this.info.bind(this)}
-
-                //          onClear={()=>{dismissKeyboard(); this.setState({value: ''})}}
+                onCancel={this.setup.bind(this)}
+                // onClear={()=>{this.info.bind(this)}}
                 //          onChangeText={value => {this.setState({value})}}
         />
          <Menu
@@ -359,32 +358,6 @@ export default class MainPage extends Component {
       // </TouchableWithoutFeedback>
     );
   }
-
-  // render() {
-  //   return(
-  //             <TouchableWithoutFeedback behavior="padding" onPress={()=>{dismissKeyboard()}}>
-  //       <ScrollView>
-  //       <View style={styles.container}>
-  //       <FlatList
-  //         directionalLockEnabled={true}
-  //         ItemSeparatorComponent={ ()=> <View style={ { height:10,} } />}
-  //         data={this.state.eventArray}
-  //         renderItem={({item}) => <View>
-  //           <TouchableOpacity style={styles.container}
-  //                             onPress={() => {this.props.para.navigation.navigate('temp')}}>
-  //            <View>
-  //               <Text>{item.name}</Text>
-  //               <Text>{item.user}</Text>
-  //            </View>
-  //           </TouchableOpacity>
-  //           </View>
-  //       }
-  //       />
-  //       </View>
-  //       </ScrollView>
-  //     </TouchableWithoutFeedback>
-  //   )
-  // }
 }
 
 const styles = StyleSheet.create({
