@@ -25,6 +25,7 @@ export default class MainPage extends Component {
       Timebuffer: [],
       Popbuffer: [],
       temp: [],
+      search: false
     };
     // setup = this.setup.bind(this)
     // this.setup()
@@ -32,6 +33,9 @@ export default class MainPage extends Component {
 
   componentWillReceiveProps() {
     this.setup()
+    // if (this.state.search) {
+    //   this.info()
+    // }
   }
  componentWillMount(){ 
   // componentWillMount() {
@@ -138,6 +142,7 @@ export default class MainPage extends Component {
 
   async info(){
     //alert(this.state.value)
+    this.setState({search: true})
     this.setState({eventArray:[]})
     this.setState({Timebuffer:[]})
     this.setState({Popbuffer:[]})

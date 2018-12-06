@@ -25,14 +25,15 @@ export default class ModifyEvent extends Component{
 	constructor(props){
         super(props);
         this.data = this.props.navigation.getParam('data','None');
-        alert(this.data)
+        // alert(this.data)
 		this.state = {
       event: '',
       description: '',
       date:'',
       time: '',
       location: '',
-      tag: []
+      tag: [],
+      maxCapacity: null
         }
   } 
 
@@ -79,6 +80,11 @@ export default class ModifyEvent extends Component{
       alert('Please select at least one category')
       return
     }
+    if (!this.state.maxCapacity) {
+        // alert(this.state.maxCapacity)
+        // this.setState({maxCapacity: Number.MAX_VALUE})
+        this.state.maxCapacity = Number.MAX_VALUE
+    }
       await firebase.database().ref('Events/').child(this.data.key).update({
           eventName: this.state.event,
           description: this.state.description,
@@ -86,6 +92,7 @@ export default class ModifyEvent extends Component{
           time: this.state.time,
           location: this.state.location,
           category:this.tag.itemsSelected,
+          maxCapacity: this.state.maxCapacity
       })
       alert("Event Modified");
     //   this.props.
@@ -223,7 +230,18 @@ export default class ModifyEvent extends Component{
                       containerStyle = {{marginLeft: 60, marginRight: 50}}
                       ref = {(tag)=>{this.tag = tag}}
                   />
-
+                        <View style={{justifyContent:'space-around'}}>
+                            <Text style={{color:'#cc0f0f', fontWeight: 'bold'}}>Max Capacity</Text>
+                            <TextInput
+                                style={styles.eventInput}
+                                keyboardType = 'numeric'
+                                placeholder="(optional)"
+                                placeholderTextColor = 'gray'
+                                onChangeText={(maxCapacity) => this.setState({ maxCapacity })}
+                                borderBottomColor = '#D3D3D3'
+                                borderBottomWidth = {2}
+                            />
+                        </View>
                   <TouchableOpacity style={styles.button1} onPress={this.onSubmit.bind(this)}>
                       <Text style={styles.submitText}> Sumbit </Text>
                   </TouchableOpacity>

@@ -68,7 +68,7 @@ export default class Profile extends Component {
                     <Text style={{color: 'white'}}>{this.state.interest[i].label}</Text>
                 </TouchableOpacity>
             )
-        }
+        
         return buttons;
     };
 

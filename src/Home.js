@@ -47,10 +47,10 @@ export default class Home extends Component {
   //    return;
   //  });
 
-  Logout(){
+  async Logout(){
     var user = firebase.auth().currentUser;
     if(user){
-      firebase.auth().signOut();
+      await firebase.auth().signOut();
       this.props.navigation.navigate('Main');
     }else{
       alert("User not logged in!");

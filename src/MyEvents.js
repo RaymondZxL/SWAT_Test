@@ -47,8 +47,9 @@ class myEvents extends Component{
     this.setState({buffer_favorite_data: []})
     this.setState({buffer_favorite: []})
     this.setState({buffer_host: []})
-    //this.setState({recommenddata: []})
-
+    this.setState({recommenddata: []})
+    this.setState({eventArray: []})
+    recommenddata = []
     buffer_host = []
     var user = firebase.auth().currentUser;
     await firebase.database().ref('Users/').child(user.uid).once('value', function(snapshot){
@@ -127,6 +128,7 @@ class myEvents extends Component{
       }.bind(this))
     }.bind(this))
     this.setState({obj: 'dsadas'});
+    this.setState({eventArray: this.state.eventArray})
 
   if (user != null) {
       interest = null
@@ -145,10 +147,10 @@ class myEvents extends Component{
             // data = this.state.data
             var eventCat = event.category
             // console.log(eventCat)
-            if (eventCat && !this.state.recommenddata.includes(event)){
+            if (eventCat && !recommenddata.includes(event)){
               for (var p = 0; p < eventCat.length; p++) {
                 if (eventCat[p].id == cat.id)
-                  this.state.recommenddata.push(event)
+                  recommenddata.push(event)
               }  
             }
           }
@@ -158,6 +160,7 @@ class myEvents extends Component{
     }
     this.setState({initialpage: 0});
     this.setState({buffer_host: buffer_host})
+    this.setState({recommenddata: recommenddata})
     this.setState({temp_fav: this.state.buffer_favorite_data})
     this.setState({temp_attend: this.state.buffer_attend_data})
   }
