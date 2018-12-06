@@ -54,21 +54,21 @@ export default class Profile extends Component {
 			}.bind(this))
 		}
 	}
-	renderButtons  = () => {
+
+	renderButtons = () => {
 	    const buttons = [];
 	    for (let i = 0; i < this.state.interest.length; i++) {
-            // alert(this.state.interest[i].key)
             buttons.push(
                 <TouchableOpacity
                     disabled={true}
                     onPress = {() => {}}
                     key={i}
-                    style={{backgroundColor: 'gray', opacity: 0.3, borderRadius: 5, borderWidth: 10, marginTop: 20, borderColor: 'gray', alignItems: 'center'}}
+                    style={{backgroundColor: '#f4f6f7', borderRadius: 5, borderWidth: 10, marginTop: 20, borderColor: '#f4f6f7', alignItems: 'center'}}
                 >
-                    <Text style={{color: 'white'}}>{this.state.interest[i].label}</Text>
+                    <Text style={{color: 'black'}}>{this.state.interest[i].label}</Text>
                 </TouchableOpacity>
             )
-        
+        }
         return buttons;
     };
 
@@ -87,7 +87,7 @@ export default class Profile extends Component {
                     <TextInput
                         style={styles.loginInput}
                         editable={false}
-                        defaultValue = {this.state.email}
+                        defaultValue={this.state.email}
                         color={'black'}
                     />
                 </View>
@@ -109,7 +109,6 @@ export default class Profile extends Component {
 				<Icon
                     color={this.state.value_color}
 					onPress={()=>{
-                        // this.props.navigation.reset([NavigationActions.navigate({routeName:'ChangeProfile'})], 0)}}
                         this.props.navigation.navigate('ChangeProfile', {onNavigateBack: this.handleOnNavigateBack})}}
                     name = {"ios-create"}
                     size={35}

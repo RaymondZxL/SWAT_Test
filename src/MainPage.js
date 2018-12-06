@@ -32,6 +32,7 @@ export default class MainPage extends Component {
   }
 
   componentWillReceiveProps() {
+    
     this.setup()
     // if (this.state.search) {
     //   this.info()

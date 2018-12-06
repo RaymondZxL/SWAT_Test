@@ -37,16 +37,6 @@ export default class Home extends Component {
     this.setState({selectedTab: tab})
   }
 
-  // await firebase.auth().currentUser.updateProfile({
-  //   displayName: this.state.name, 
-  //    email: this.state.email,
-  //  }).then(function() {
-  //    // alert('');
-  //  }).catch(function(error) {
-  //    alert(error.errorMessage);
-  //    return;
-  //  });
-
   async Logout(){
     var user = firebase.auth().currentUser;
     if(user){
@@ -57,10 +47,9 @@ export default class Home extends Component {
     }
   }
 
-  // handleOnNavigateBack = ()=> {this.render()}
   render(){
-    handleToChangeSelectedTab = this.handleToChangeSelectedTab
-    const {navigation} = this.props
+    handleToChangeSelectedTab = this.handleToChangeSelectedTab;
+    const {navigation} = this.props;
     return(
       <TabNavigator tabBarStyle={{backgroundColor:'white'}} style={{backgroundColor:'white'}}>
       <TabNavigator.Item
@@ -82,7 +71,6 @@ export default class Home extends Component {
           onPress={()=>this.setState({selectedTab: 'event'})}
         >
         <MyEvents navigation={navigation} hh={new Date()}/>
-        {/* <MyEvents {...this.props}/> */}
       </TabNavigator.Item>
       <TabNavigator.Item
         title="Create"
@@ -108,7 +96,7 @@ export default class Home extends Component {
         style={styles.button1}
         onPress={this.Logout.bind(this)}
         >
-        <Text style={styles.buttonText}> Log out </Text>
+        <Text style={styles.submitText}>Log out</Text>
         </TouchableOpacity>
         </View>
       </TabNavigator.Item>
@@ -117,10 +105,3 @@ export default class Home extends Component {
     )
   }
 }
-
-// function mapStateToProps(state) {
-//   return {
-//     state: state, 
-    
-//   }
-// }
