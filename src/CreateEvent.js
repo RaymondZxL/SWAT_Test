@@ -43,7 +43,7 @@ export default class CreateEvent extends Component {
 
     async onSubmit() {
         if (this.state.event === "") {
-            alert('Please enter valid name!');
+            alert('Please enter valid name');
             return;
         }
         if (this.state.description === "") {
