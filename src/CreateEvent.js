@@ -30,7 +30,7 @@ export default class CreateEvent extends Component {
             time: '',
             location: '',
             tag: null,
-            dateTime: date + ' ' + time,
+            dateTime: '',
             maxCapacity: null
         }
     }
@@ -227,7 +227,6 @@ export default class CreateEvent extends Component {
                                     placeholder="(optional)"
                                     placeholderTextColor='gray'
                                     onChangeText={(maxCapacity) => this.onChange(maxCapacity)}
-                                    value={this.state.maxCapacity}
                                     borderBottomColor='#D3D3D3'
                                     borderBottomWidth={2}
                                 />
