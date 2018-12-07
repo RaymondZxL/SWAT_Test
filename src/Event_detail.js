@@ -31,16 +31,12 @@ export default class EventDetail extends Component {
             eventName: '',
             favoriteNum: '',
             liked: '',
-            maxCapacity: '',
-            rsvpNum: '',
-            edit: false
         }
     }
 
     static navigationOptions={
         title: 'Event',
-        headerLeft: null,
-        gesturesEnabled: false,
+        headerLeft: null
     };
 
     async componentWillMount() {
@@ -57,11 +53,6 @@ export default class EventDetail extends Component {
             this.setState({favoriteNum: snapshot.val().favoriteNum});
             if (this.state.favoriteNum == null) {
                 this.setState({favoriteNum: 0});
-            }
-            this.setState({maxCapacity: snapshot.val().maxCapacity})
-            this.setState({rsvpNum: snapshot.val().rsvpNum})
-            if (this.state.rsvpNum == null) {
-                this.setState({rsvpNum: 0})
             }
         }.bind(this));
 
@@ -82,13 +73,10 @@ export default class EventDetail extends Component {
         }
         if (this.state.buffer_2.includes(data.key)) {
             this.setState({value_color1:"#E3170D"});
-        }else {
-            // alert(this.state.maxCapacity)
-            if (this.state.rsvpNum == this.state.maxCapacity) {
-                this.setState({edit: true})
-            }
         }
     }
+
+    onSubmit(){}
 
     async onSubmit_like() {
         var data = this.props.navigation.getParam('data', 'None');
@@ -102,7 +90,6 @@ export default class EventDetail extends Component {
             var removedItem = this.state.buffer.splice(i, 1);
             this.state.favoriteNum -= 1;
         }
-        this.setState({favoriteNum: this.state.favoriteNum})
 
         await firebase.database().ref('Events/').child(data.key).set({
             user: this.state.user,
@@ -113,8 +100,6 @@ export default class EventDetail extends Component {
             date: this.state.date,
             category: this.state.buffer_cata,
             favoriteNum: this.state.favoriteNum,
-            maxCapacity: this.state.maxCapacity,
-            rsvpNum: this.state.rsvpNum
         });
 
         await firebase.database().ref('Users/').child(uid).set({
@@ -139,27 +124,10 @@ export default class EventDetail extends Component {
 
         if (this.state.value_color1 === 'grey') {
             this.state.buffer_2.push(data.key);
-            this.state.rsvpNum += 1;
-
         } else {
             var i = this.state.buffer_2.indexOf(data.key);
             var removedItem = this.state.buffer_2.splice(i, 1);
-            this.state.rsvpNum -= 1;
         }
-        this.setState({rsvpNum: this.state.rsvpNum})
-
-        await firebase.database().ref('Events/').child(data.key).set({
-            user: this.state.user,
-            time: this.state.time,
-            eventName: this.state.eventName,
-            description: this.state.description,
-            location: this.state.location,
-            date: this.state.date,
-            category: this.state.buffer_cata,
-            favoriteNum: this.state.favoriteNum,
-            maxCapacity: this.state.maxCapacity,
-            rsvpNum: this.state.rsvpNum
-        });
 
         await firebase.database().ref('Users/').child(uid).set({
             email: this.state.email,
@@ -212,14 +180,14 @@ export default class EventDetail extends Component {
                     </View>
 
                     <View style={{flexDirection: 'row', marginLeft: 30, marginRight: 30, marginBottom: 20, backgroundColor: '#fff'}}>
-                        <Icon1
+                        <Icon1 style={{flex:0.6}}
                             color={'gray'}
                             name={"ios-arrow-back"}
                             size={35}
                             onPress={()=>{this.props.navigation.state.params.onNavigateBack(); this.props.navigation.goBack()}}
                         />
 
-                        <View style={{flex: 1, marginLeft: 180, marginTop: 2}}>
+                        <View style={{flex:0.2}}>
                             <Icon1
                                 color={this.state.value_color2}
                                 onPress={this.onSubmit_like.bind(this)}
@@ -228,10 +196,9 @@ export default class EventDetail extends Component {
                             />
                         </View>
 
-                        <View style={{marginRight: 0, marginTop: -5}}>
+                        <View style={{flex:0.25}}>
                             <Button color={this.state.value_color1}
                                 title={'RSVP'}
-                                disabled={this.state.edit}
                                 buttonStyle={{backgroundColor: "rgba(92, 99,216, 1)"}}
                                 onPress={this.onSubmit_attend.bind(this)}
                             >

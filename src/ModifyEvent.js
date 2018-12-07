@@ -55,25 +55,10 @@ export default class ModifyEvent extends Component{
           this.setState({time:snapshot.val().time});
           this.setState({location: snapshot.val().location});
           this.setState({tag:snapshot.val().category});
-          this.setState({originalMax:snapshot.val().maxCapacity})
-          this.setState({category:snapshot.val().category})
-          this.setState({favoriteNum:snapshot.val().favoriteNum})
       }.bind(this));
-    // //   alert(this.state.tag)
-    // // if (!this.state.originalMax) {
-    // //     this.setState({originalMax: Number.MAX_VALUE})
-    // // }
-    // // alert(this.state.originalMax)
-    // if (this.state.originalMax == Number.MAX_VALUE)
-    // //   this.setState({displayNum: ""})
-    //   this.state.displayNum = ""
-    // else {
-    //     // this.setState({displayNum: this.state.originalMax})
-    //     alert
-    //     this.state.displayNum = this.state.originalMax
-    // }
+    //   alert(this.state.tag)
     }
-    
+  
 
 	async onSubmit(){
     if (this.state.event === "") {
@@ -130,19 +115,17 @@ export default class ModifyEvent extends Component{
             return;
         }
     }
-    user = firebase.auth().currentUser
-    await firebase.database().ref('Events/').child(this.data.key).set({
-        eventName: this.state.event,
-        location: this.state.location,
-        description: this.state.description,
-        date: this.state.date,
-        time: this.state.time,
-        user: user.email,
-        category:this.tag.itemsSelected,
-        maxCapacity: this.state.maxCapacity,
-        favoriteNum: this.state.favoriteNum
-    })
+      await firebase.database().ref('Events/').child(this.data.key).update({
+          eventName: this.state.event,
+          description: this.state.description,
+          date:this.state.date,
+          time: this.state.time,
+          location: this.state.location,
+          category:this.tag.itemsSelected,
+          maxCapacity: this.state.maxCapacity
+      })
       alert("Event Modified");
+    //   this.props.
       this.props.navigation.state.params.onNavigateBack()
       this.props.navigation.goBack();
      
