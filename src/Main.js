@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import { Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Dimensions, KeyboardAvoidingView } from 'react-native';
+import { Alert, Button, Text, TouchableOpacity, TextInput, View, ScrollView, StyleSheet, Image, Animated, TouchableWithoutFeedback, Keyboard, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { createStackNavigator, NavigationActions } from 'react-navigation';
 import firebase from 'react-native-firebase';
 import styles from '../src/Styles'
 import Icon from 'react-native-vector-icons/Ionicons'
-const {width: WIDTH} = Dimensions.get('window')
+import resolveAssetSource from 'resolveAssetSource';
+
+const {width: WIDTH} = Dimensions.get('window');
 
 export default class App extends Component {
   constructor(props){
     super(props);
+    this.imageHeight = new Animated.Value(280);
+    this.pic = require("../assets/IMG_2197.jpg");
+    this.s = resolveAssetSource(this.pic);
+    this.imageWidth = new Animated.Value(this.s.width);
     this.state = {
       user:{
         email: '',
@@ -33,6 +39,43 @@ export default class App extends Component {
     title: 'SWAT',
   };
 
+  componentWillMount() {
+    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+    this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+  }
+
+  componentWillUnmount() {
+    this.keyboardWillShowSub.remove();
+    this.keyboardWillHideSub.remove();
+  }
+
+    keyboardWillShow = (event) => {
+        Animated.parallel([
+            Animated.timing(this.imageHeight, {
+                duration: event.duration,
+                toValue: 110,
+            }),
+            Animated.timing(this.imageWidth, {
+                duration: event.duration,
+                toValue: 110/280*this.s.width,
+            }),
+        ]).start();
+    };
+
+    keyboardWillHide = (event) => {
+        Animated.parallel([
+            Animated.timing(this.imageHeight, {
+                duration: event.duration,
+                toValue: 280,
+            }),
+            Animated.timing(this.imageWidth, {
+                duration: event.duration,
+                toValue: this.s.width,
+            }),
+        ]).start();
+    };
+
+
   componentDidMount(){
     firebase.auth().onAuthStateChanged(user =>{
       if(user){
@@ -44,9 +87,7 @@ export default class App extends Component {
   }
 
   async onLogin() {
-    // const { email, password } = this.state;
-  
-    if(this.state.email === '' || this.state.password === ''){
+    if (this.state.email === '' || this.state.password === '') {
       alert('Empty!');
     }
     else {
@@ -64,7 +105,6 @@ export default class App extends Component {
 
         firebase.auth().onAuthStateChanged(user =>{
           if(user){
-            // this.props.navigation.navigate('Home');
             this.props.navigation.reset([NavigationActions.navigate({routeName: 'Home'})], 0)
           }else{
             this.props.navigation.navigate('Main');
@@ -82,15 +122,15 @@ export default class App extends Component {
     else {
       this.setState({onOffPassword: true, clicked: false})
     }
-  }
+  };
 
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.container1} behavior='padding'>
+        <KeyboardAvoidingView style={styles.container1} behavior='padding'>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container1}>
-          <Image style={styles.logo} source={require("../assets/IMG_2197.jpg")}/>
+          <Animated.Image source={require("../assets/IMG_2197.jpg")} style = {{height: this.imageHeight, width: this.imageWidth}}/>
 
           <View>
             <View style={{flexDirection: 'row', justifyContent:'space-around', alignItems: 'center'}}>
@@ -144,7 +184,7 @@ export default class App extends Component {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
     );
   }
 }

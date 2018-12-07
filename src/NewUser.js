@@ -51,13 +51,17 @@ export default class NewUser extends React.Component {
 		const date_regex = /^\d{2}\/\d{2}\/\d{4}$/;
 		if (this.state.email === '' || this.state.name === '' || this.state.password === '' || this.state.re_password === '') {
 			alert('Entries Cannot Be Empty!');
+			return
 		} else if (this.state.password != this.state.re_password) {
 			alert('Two Passwords Do Not Match!');
+			return
 		} else if (reg.test(this.state.email) === false) {
 			alert('Please use your UCSD Email');
+			return
 		} else if (this.tag.totalSelected == 0) {
 			// alert(JSON.stringify(this.tag.itemsSelected));
 			alert('Please select at least one interest')
+			return
 		} else {
 			await firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
 		      	var errorCode = error.code;
@@ -72,7 +76,10 @@ export default class NewUser extends React.Component {
 		    });
 
         // 	await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
-		    // });
+				// });
+			if (!firebase.auth().currentUser) {
+				return;
+			}
 
       await firebase.auth().currentUser.updateProfile({
 							displayName: this.state.name, 
@@ -232,7 +239,7 @@ export default class NewUser extends React.Component {
 
 							<View style={{flexDirection: 'row'}}>
 								<Text style={{fontSize: 15}}>Have an account?</Text>
-    							<TouchableOpacity onPress={() => {this.props.navigation.reset([NavigationActions.navigate({routeName:'Login'})], 0)}}>
+    							<TouchableOpacity onPress={() => {this.props.navigation.reset([NavigationActions.navigate({routeName:'Main'})], 0)}}>
 									<Text style={styles.buttonText1}>Sign in</Text>
 								</TouchableOpacity>
 							</View>

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { Alert, Button, Text, TouchableOpacity, TextInput, TouchableHighlight, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
+import {Dimensions, Alert, Button, Text, TouchableOpacity, TextInput, TouchableHighlight, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { createStackNavigator,NavigationActions  } from 'react-navigation';
 import ResponsiveImage from 'react-native-responsive-image';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Icon1 from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import firebase from 'react-native-firebase';
+import resolveAssetSource from 'resolveAssetSource';
 
 var temp = require('../src/MyEvents');
+const {width: WIDTH} = Dimensions.get('window')
 
 export default class EventDetail_Host extends Component {
     constructor(props) {
@@ -35,16 +37,24 @@ export default class EventDetail_Host extends Component {
             favoriteNum: '',
             liked: '',
         }
+        this.setup()
     }
 
     static navigationOptions = {
         title: 'Event Detail',
         headerLeft:null,
+        gesturesEnabled: false,
+
     };
 
-    handleOnNavigateBack=() => {this.componentWillMount()};
+    handleOnNavigateBack=() => {this.componentWillMount()}
 
-    async componentWillMount() {
+    componentWillMount() {
+        this.setup()
+    }
+
+    async setup() {
+        // alert("fneihfei")
         var data = this.props.navigation.getParam('data', 'None');
         var uid = firebase.auth().currentUser.uid;
         await firebase.database().ref('Events/').child(data.key).once('value', function(snapshot) {
@@ -86,49 +96,73 @@ export default class EventDetail_Host extends Component {
         this.props.navigation.reset([NavigationActions.navigate({routeName: 'BottomTab'})], 0)
     }
 
+    renderButtons = () => {
+        const buttons = [];
+        for (let i = 0; i < this.state.buffer_cata.length; i++) {
+            buttons.push(
+                <TouchableOpacity
+                    disabled={true}
+                    onPress = {() => {}}
+                    key={i}
+                    style={{backgroundColor: '#cc0f0f', borderColor: '#cc0f0f', opacity: 0.5, borderRadius: 30, borderWidth: 10, marginBottom: 5, marginRight: 5, alignItems: 'flex-start'}}
+                >
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>{this.state.buffer_cata[i].label}</Text>
+                </TouchableOpacity>
+            )
+        }
+        return buttons;
+    };
+
     render() {
+        let pic = require('../assets/event.jpg');
+        let s = resolveAssetSource(pic);
+        let w = s.width;
+        let h = s.height;
+        let space = '   ';
+
         return(
-            <KeyboardAvoidingView style={styles.container} behavior="padding">
+            <View style={styles.container}>
                 <ScrollView>
-                    <View style={{flex: 1, backgroundColor: '#fff', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginLeft: 30, marginRight: 30}}>
-                        <ResponsiveImage style = {{height: 100, width: 150, margin: 20}} source={require('../assets/event.jpg')}/>
-                        <View>
-                            <Text style={styles.title}>{this.superData.eventName}</Text>
+                    <View style={{flex: 1, backgroundColor: '#fff', flexDirection: 'column'}}>
+                        <ResponsiveImage style = {{height: h*(WIDTH/w), width: WIDTH}} source={require('../assets/event.jpg')}/>
+                        <View style={{marginLeft: 30, marginRight: 30}}>
+                            <Text style={styles.title}>{this.state.eventName}</Text>
+
+                            <View style={{flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10}}>
+                                {this.renderButtons()}
+                            </View>
+
+                            <Text style={styles.textBox}>INFO</Text>
+                            <View style={{marginBottom: 15}}>
+                                <View style={{flexDirection: 'row'}}>
+                                    <Icon name={"clock"} size={20}/>
+                                    <Text style={{fontFamily: 'Avenir', fontSize: 15}}>{this.state.date}</Text>
+                                    <Text>{space}</Text>
+                                    <Text style={{fontFamily: 'Avenir', fontSize: 15}}>{this.state.time}</Text>
+
+                                    <Icon style={{marginLeft: 25}} name={"tag"} size={20}/>
+                                    <Text style={{fontFamily: 'Avenir', fontSize: 15}}>$</Text>
+                                </View>
+                                <View style={{marginTop: 5, flexDirection: 'row'}}>
+                                    <Icon name={"location"} size={20}/>
+                                    <Text style={{flexWrap: 'wrap', fontFamily: 'Avenir', fontSize: 15}}>{this.state.location}</Text>
+                                </View>
+                            </View>
 
                             <Text style={styles.textBox}>Description:</Text>
-                            <Text style={styles.contents}>{this.superData.description}</Text>
-
-                            <Text style={styles.textBox}>Date:</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 30}}>
-                                <Icon name={"calendar"} size={26} color={"#E3170D"} style={{flex: 1}}/>
-                                <Text style={{fontSize: 18, alignItems: 'center', justifyContent: 'center', flex: 6}}>
-                                    {this.superData.date}
-                                </Text>
-                            </View>
-
-                            <Text style={styles.textBox}>Time:</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 30}}>
-                                <Icon name={"clock"} size={26} color={"#E3170D"} style={{flex: 1}}/>
-                                <Text style={{fontSize: 18, alignItems: 'center', justifyContent: 'center', flex: 6}}>{this.superData.time}</Text>
-                            </View>
-
-                            <Text style={styles.textBox}>Location:</Text>
-                            <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 30}}>
-                                <Icon name={"location"} size={26} color={"#E3170D"} style={{flex: 1}}/>
-                                <Text style={{fontFamily: 'Avenir', fontSize:18, alignItems: 'center', justifyContent: 'center', flex: 6}}>{this.superData.location}</Text>
-                            </View>
+                            <Text style={styles.contents}>{this.state.description}</Text>
                         </View>
                     </View>
 
                     <View style={{flexDirection: 'row', marginLeft: 30, marginRight: 30, marginBottom: 20, backgroundColor: '#fff'}}>
-                        <Icon1 style={{flex: 0.6}}
+                        <Icon1
                             color={'gray'}
                             name={"ios-arrow-back"}
                             size={35}
                             onPress={()=>{this.props.navigation.state.params.onNavigateBack(); this.props.navigation.goBack()}}
                         />
 
-                        <View style={{flex: 0.2}}>
+                        <View style={{flex: 1, marginLeft: 180, marginTop: 2}}>
                             <Icon1
                                 color={'gray'}
                                 onPress={() => {this.deleteEvent()}}
@@ -137,7 +171,7 @@ export default class EventDetail_Host extends Component {
                             />
                         </View>
 
-                        <View style={{flex: 0.2}}>
+                        <View style={{marginRight: 0, marginTop: -5}}>
                             <Icon2
                                 color={'gray'}
                                 onPress={() => {this.props.navigation.navigate('ModifyEvent', {onNavigateBack: this.handleOnNavigateBack, data: this.superData})}}
@@ -147,7 +181,7 @@ export default class EventDetail_Host extends Component {
                         </View>
                     </View>
                 </ScrollView>
-            </KeyboardAvoidingView>
+            </View>
         )
     }
 }
@@ -156,22 +190,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
         flexDirection: 'column',
     },
 
     textBox: {
         fontFamily: 'Avenir',
-        fontSize: 20,
+        fontSize: 15,
         fontWeight: 'bold',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
 
     contents: {
         fontFamily: 'Avenir',
-        fontSize: 18,
+        fontSize: 15,
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom:30,
@@ -179,10 +209,10 @@ const styles = StyleSheet.create({
 
     title: {
         fontFamily: 'Avenir',
-        fontSize: 18,
+        fontSize: 22,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom:30,
-        fontWeight: 'bold',
+        marginBottom: 5,
+        marginTop: 5,
     },
 });

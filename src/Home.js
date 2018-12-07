@@ -32,6 +32,7 @@ export default class Home extends Component {
   }
 
   componentWillReceiveProps() {
+    
     this.setup()
     // if (this.state.search) {
     //   this.info()

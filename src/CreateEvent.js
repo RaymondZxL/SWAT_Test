@@ -36,10 +36,10 @@ export default class CreateEvent extends Component {
         }
     }
 
-    static navigationOptions={
-        title: 'Add Event',
-        headerLeft: null
-    };
+    // static navigationOptions={
+    //     title: 'Add Event',
+    //     headerLeft: null
+    // };
 
     async onSubmit() {
         if (this.state.event === "") {
@@ -110,7 +110,7 @@ export default class CreateEvent extends Component {
                 maxCapacity: this.state.maxCapacity,
                 favoriteNum: 0
             }).then((data)=>{
-                this.props.navigation.reset([NavigationActions.navigate({routeName: 'Home'})], 0);
+                this.props.navigation.reset([NavigationActions.navigate({routeName: 'BottomTab'})], 0);
                 alert('Event Created Successfully!');
             }).catch((error)=>{
                 console.log('error ', error);
