@@ -31,7 +31,8 @@ export default class CreateEvent extends Component {
             location: '',
             tag: null,
             dateTime: '',
-            maxCapacity: null
+            maxCapacity: null,
+            maxCapText: ''
         }
     }
 
@@ -61,8 +62,24 @@ export default class CreateEvent extends Component {
             alert('Please select at least one category');
             return;
         }
-        if (!this.state.maxCapacity) {
+        if (!this.state.maxCapText)
             this.state.maxCapacity = Number.MAX_VALUE
+        else {
+            let newText = ''
+            let numbers = '0123456789'
+
+            for (var z = 0; z < this.state.maxCapText.length; z++) {
+                if (numbers.indexOf(this.state.maxCapText[z]) > -1) {
+                    if (!(newText == '' && this.state.maxCapText[z] == 0))
+                        newText = newText + this.state.maxCapText[z]
+                    else {
+                        alert('Please enter an integer')
+                        return;
+                    }
+                }
+            }
+            var integer = parseInt(newText, 10)
+            this.setState({maxCapacity: integer})
         }
 
         let i;
@@ -106,24 +123,6 @@ export default class CreateEvent extends Component {
             await firebase.database().ref('Events').child('NumberOfEvents').set({numberOfEvents});
 		}
 	}
-
-	async onChange(text) {
-        let newText = '';
-        let numbers = '0123456789';
-
-        for (var i = 0; i < text.length; i++) {
-            if (numbers.indexOf(text[i]) > -1) {
-                if (!(newText == '' && text[i] == 0))
-                    newText = newText + text[i];
-            }
-            else {
-                alert('Please enter an integer');
-                return;
-            }
-        }
-        var integer = parseInt(newText, 10);
-        this.setState({maxCapacity: integer})
-    }
 
     render() {
         return(
@@ -226,7 +225,7 @@ export default class CreateEvent extends Component {
                                     keyboardType='numeric'
                                     placeholder="(optional)"
                                     placeholderTextColor='gray'
-                                    onChangeText={(maxCapacity) => this.onChange(maxCapacity)}
+                                    onChangeText={(maxCapText) => this.setState({maxCapText})}
                                     borderBottomColor='#D3D3D3'
                                     borderBottomWidth={2}
                                 />
