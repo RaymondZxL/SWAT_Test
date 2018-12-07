@@ -38,7 +38,7 @@ export default class ModifyEvent extends Component {
             category: null,
             favoriteNum: null,
             dateTime: '',
-            maxCapText: '',
+            maxCapText: null,
         }
     }
 
@@ -81,7 +81,7 @@ export default class ModifyEvent extends Component {
             alert('Please select at least one category');
             return
         }
-        if (!this.state.maxCapacity) {
+        if (!this.state.maxCapText) {
             if (!this.state.originalMax)
                 this.state.maxCapacity = Number.MAX_VALUE;
             else
@@ -102,7 +102,6 @@ export default class ModifyEvent extends Component {
             }
             let integer = parseInt(newText, 10);
             this.state.maxCapacity = integer;
-
             if (this.state.originalMax != Number.MAX_VALUE && this.state.maxCapacity < this.state.originalMax) {
                 alert("Please enter a number larger or equal to original max capacity");
                 return;
@@ -110,11 +109,13 @@ export default class ModifyEvent extends Component {
         }
 
         let i;
+        this.state.date = ''
         for (i = 0 ; i < 10; i++) {
             this.state.date += this.state.dateTime[i];
         }
 
         let j;
+        this.state.time = ''
         for (j = 11; j < 16; j++) {
             this.state.time += this.state.dateTime[j];
         }
@@ -238,7 +239,7 @@ export default class ModifyEvent extends Component {
                                 keyboardType='numeric'
                                 placeholder="(optional)"
                                 placeholderTextColor='gray'
-                                onChangeText={(mapCapText) => this.setState({mapCapText})}
+                                onChangeText={(maxCapText) => this.setState({maxCapText})}
                                 borderBottomColor='#D3D3D3'
                                 borderBottomWidth={2}
                             />

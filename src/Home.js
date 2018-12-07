@@ -355,7 +355,7 @@ export default class Home extends Component {
 
             size={22}/>}
           >
-          <MenuItem onPress={()=> {this.hideMenu(); this.setState({color:"grey", eventArray: this.state.Timebuffer})}}>Sort by time</MenuItem>
+          <MenuItem onPress={()=> {this.hideMenu(); this.setState({color:"grey", eventArray: this.state.Timebuffer})}}>Sort by date</MenuItem>
           <MenuItem onPress={()=> {this.hideMenu(); this.setState({color:"grey", eventArray: this.state.Popbuffer.reverse()})}}>Sort by popularity</MenuItem>
         </Menu>
       </View>
