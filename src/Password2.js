@@ -26,7 +26,7 @@ export default class Login extends Component {
           	style={styles.button1}
 			onPress={() =>
               {
-              	this.props.navigation.navigate('Main')}}
+              	this.props.navigation.navigate('Login')}}
         	>
          	<Text style={styles.buttonText}> Go to main page </Text>
        		</TouchableOpacity>

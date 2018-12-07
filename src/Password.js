@@ -41,7 +41,7 @@ export default class Password extends React.Component {
 		          alert(errorMessage);
 		        }
 		    });
-			this.props.navigation.navigate('Main');
+			this.props.navigation.navigate('Login');
 		}
 	}
 
@@ -66,7 +66,7 @@ export default class Password extends React.Component {
 
 					<View style={{flexDirection: 'row'}}>
     					<Text style={{fontSize: 15}}>Just remembered?</Text>
-						<TouchableOpacity onPress={() => {this.props.navigation.reset([NavigationActions.navigate({routeName:'Main'})], 0)}}>
+						<TouchableOpacity onPress={() => {this.props.navigation.reset([NavigationActions.navigate({routeName:'Login'})], 0)}}>
     						<Text style={styles.buttonText1}>Sign in</Text>
         				</TouchableOpacity>
 					</View>

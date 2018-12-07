@@ -33,11 +33,7 @@ export default class ModifyEvent extends Component{
       time: '',
       location: '',
       tag: [],
-      maxCapacity: null,
-      originalMax: null,
-      displayNum: 0,
-      category: null,
-      favoriteNum: null,
+      maxCapacity: null
         }
   } 
 
@@ -54,25 +50,10 @@ export default class ModifyEvent extends Component{
           this.setState({time:snapshot.val().time});
           this.setState({location: snapshot.val().location});
           this.setState({tag:snapshot.val().category});
-          this.setState({originalMax:snapshot.val().maxCapacity})
-          this.setState({category:snapshot.val().category})
-          this.setState({favoriteNum:snapshot.val().favoriteNum})
       }.bind(this));
-    // //   alert(this.state.tag)
-    // // if (!this.state.originalMax) {
-    // //     this.setState({originalMax: Number.MAX_VALUE})
-    // // }
-    // // alert(this.state.originalMax)
-    // if (this.state.originalMax == Number.MAX_VALUE)
-    // //   this.setState({displayNum: ""})
-    //   this.state.displayNum = ""
-    // else {
-    //     // this.setState({displayNum: this.state.originalMax})
-    //     alert
-    //     this.state.displayNum = this.state.originalMax
-    // }
+    //   alert(this.state.tag)
     }
-    
+  
 
 	async onSubmit(){
     if (this.state.event === "") {
@@ -102,51 +83,23 @@ export default class ModifyEvent extends Component{
     if (!this.state.maxCapacity) {
         // alert(this.state.maxCapacity)
         // this.setState({maxCapacity: Number.MAX_VALUE})
-        if (!this.state.originalMax)
-            this.state.maxCapacity = Number.MAX_VALUE
-        else
-            this.state.maxCapacity = this.state.originalMax
-    }else {
-        if (this.state.originalMax != Number.MAX_VALUE && this.state.maxCapacity < this.state.originalMax) {
-            alert("Please enter a number larger or equal to original max capacity")
-            return;
-        }
+        this.state.maxCapacity = Number.MAX_VALUE
     }
-    user = firebase.auth().currentUser
-    await firebase.database().ref('Events/').child(this.data.key).set({
-        eventName: this.state.event,
-        location: this.state.location,
-        description: this.state.description,
-        date: this.state.date,
-        time: this.state.time,
-        user: user.email,
-        category:this.tag.itemsSelected,
-        maxCapacity: this.state.maxCapacity,
-        favoriteNum: this.state.favoriteNum
-    })
+      await firebase.database().ref('Events/').child(this.data.key).update({
+          eventName: this.state.event,
+          description: this.state.description,
+          date:this.state.date,
+          time: this.state.time,
+          location: this.state.location,
+          category:this.tag.itemsSelected,
+          maxCapacity: this.state.maxCapacity
+      })
       alert("Event Modified");
+    //   this.props.
       this.props.navigation.state.params.onNavigateBack()
       this.props.navigation.goBack();
      
-    }
-    
-    async onChange(text) {
-        let newText = ''
-        let numbers = '0123456789'
-
-        for (var i = 0; i < text.length; i++) {
-            if (numbers.indexOf(text[i]) > -1) {
-                if (!(newText == '' && text[i] == 0))
-                    newText += text[i]
-            }
-            else {
-                alert('Please enter an integer.')
-                return
-            }
-            var integer = parseInt(newText, 10)
-            this.setState({maxCapacity: integer})
-        }
-    }
+		}
 
     render() {
       return(
@@ -284,9 +237,7 @@ export default class ModifyEvent extends Component{
                                 keyboardType = 'numeric'
                                 placeholder="(optional)"
                                 placeholderTextColor = 'gray'
-                                // value={this.state.originalMax.toString(10)}
-                                // value={""+this.state.displayNum}
-                                onChangeText={(text) => this.onChange(text)}
+                                onChangeText={(maxCapacity) => this.setState({ maxCapacity })}
                                 borderBottomColor = '#D3D3D3'
                                 borderBottomWidth = {2}
                             />

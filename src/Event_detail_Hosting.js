@@ -83,7 +83,7 @@ export default class EventDetail_Host extends Component {
 
     deleteEvent() {
         firebase.database().ref('Events/').child(this.superData.key).remove();
-        this.props.navigation.reset([NavigationActions.navigate({routeName: 'Home'})], 0)
+        this.props.navigation.reset([NavigationActions.navigate({routeName: 'BottomTab'})], 0)
     }
 
     render() {
