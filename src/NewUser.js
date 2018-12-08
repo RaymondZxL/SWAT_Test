@@ -239,7 +239,7 @@ export default class NewUser extends React.Component {
 
 							<View style={{flexDirection: 'row'}}>
 								<Text style={{fontSize: 15}}>Have an account?</Text>
-    							<TouchableOpacity onPress={() => {this.props.navigation.reset([NavigationActions.navigate({routeName:'Main'})], 0)}}>
+    							<TouchableOpacity onPress={() => {this.props.navigation.reset([NavigationActions.navigate({routeName:'Login'})], 0)}}>
 									<Text style={styles.buttonText1}>Sign in</Text>
 								</TouchableOpacity>
 							</View>

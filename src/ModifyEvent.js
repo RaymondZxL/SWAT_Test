@@ -101,7 +101,13 @@ export default class ModifyEvent extends Component {
                 }
             }
             let integer = parseInt(newText, 10);
+
+            if (!integer) {
+                alert('Please enter a valid integer')
+                return
+            }
             this.state.maxCapacity = integer;
+            this.setState({maxCapacity: integer})
             if (this.state.originalMax != Number.MAX_VALUE && this.state.maxCapacity < this.state.originalMax) {
                 alert("Please enter a number larger or equal to original max capacity");
                 return;

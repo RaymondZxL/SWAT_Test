@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import {Dimensions, Alert, Button, Text, TouchableOpacity, TextInput, TouchableHighlight, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Alert, Button, Text, TouchableOpacity, TextInput, TouchableHighlight, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import ResponsiveImage from 'react-native-responsive-image';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Icon1 from 'react-native-vector-icons/Ionicons';
+import resolveAssetSource from 'resolveAssetSource';
 import firebase from 'react-native-firebase';
-import resolveAssetSource from 'resolveAssetSource'
-const {width: WIDTH} = Dimensions.get('window')
 
+const { width: WIDTH } = Dimensions.get('window');
 export default class EventDetail extends Component {
     constructor(props) {
         super(props);
@@ -33,7 +33,7 @@ export default class EventDetail extends Component {
             eventName: '',
             favoriteNum: '',
             liked: '',
-            maxCapacity: '',
+            macCapacity: '',
             rsvpNum: '',
             edit: false
         }
@@ -60,8 +60,9 @@ export default class EventDetail extends Component {
             if (this.state.favoriteNum == null) {
                 this.setState({favoriteNum: 0});
             }
-            this.setState({maxCapacity: snapshot.val().maxCapacity})
-            this.setState({rsvpNum: snapshot.val().rsvpNum})
+            this.setState({maxCapacity: snapshot.val().maxCapacity});
+            this.setState({rsvpNum: snapshot.val().rsvpNum});
+            console.log("hhh" + this.state.rsvpNum)
             if (this.state.rsvpNum == null) {
                 this.setState({rsvpNum: 0})
             }
@@ -84,9 +85,10 @@ export default class EventDetail extends Component {
         }
         if (this.state.buffer_2.includes(data.key)) {
             this.setState({value_color1:"#E3170D"});
-        }else {
-            // alert(this.state.maxCapacity)
+        } else {
+            console.log("eee")
             if (this.state.rsvpNum == this.state.maxCapacity) {
+                console.log("fefe")
                 this.setState({edit: true})
             }
         }
@@ -104,7 +106,7 @@ export default class EventDetail extends Component {
             var removedItem = this.state.buffer.splice(i, 1);
             this.state.favoriteNum -= 1;
         }
-        this.setState({favoriteNum: this.state.favoriteNum})
+        this.setState({favoriteNum: this.state.favoriteNum});
 
         await firebase.database().ref('Events/').child(data.key).set({
             user: this.state.user,
@@ -142,13 +144,12 @@ export default class EventDetail extends Component {
         if (this.state.value_color1 === 'grey') {
             this.state.buffer_2.push(data.key);
             this.state.rsvpNum += 1;
-
         } else {
             var i = this.state.buffer_2.indexOf(data.key);
             var removedItem = this.state.buffer_2.splice(i, 1);
             this.state.rsvpNum -= 1;
         }
-        this.setState({rsvpNum: this.state.rsvpNum})
+        this.setState({rsvpNum: this.state.rsvpNum});
 
         await firebase.database().ref('Events/').child(data.key).set({
             user: this.state.user,
@@ -172,9 +173,9 @@ export default class EventDetail extends Component {
             ListOfFavorite: this.state.buffer,
             ListOfAttending: this.state.buffer_2,
         }).then((data)=>{
-            console.log('data ' , data)
+            console.log('data ', data)
         }).catch((error)=>{
-            console.log('error ' , error)
+            console.log('error ', error)
         });
         this.state.value_color1 === 'grey' ? this.setState({value_color1:"#E3170D"}): this.setState({value_color1:'grey'})
     }
@@ -222,9 +223,6 @@ export default class EventDetail extends Component {
                                     <Text style={{fontFamily: 'Avenir', fontSize: 15}}>{this.superData.date}</Text>
                                     <Text>{space}</Text>
                                     <Text style={{fontFamily: 'Avenir', fontSize: 15}}>{this.superData.time}</Text>
-
-                                    <Icon style={{marginLeft: 25}} name={"tag"} size={20}/>
-                                    <Text style={{fontFamily: 'Avenir', fontSize: 15}}>$</Text>
                                 </View>
                                 <View style={{marginTop: 5, flexDirection: 'row'}}>
                                     <Icon name={"location"} size={20}/>
@@ -257,6 +255,7 @@ export default class EventDetail extends Component {
                         <View style={{marginRight: 0, marginTop: -5}}>
                             <Button color={this.state.value_color1}
                                 title={'RSVP'}
+                                disabled={this.state.edit}
                                 buttonStyle={{backgroundColor: "rgba(92, 99,216, 1)"}}
                                 onPress={this.onSubmit_attend.bind(this)}
                             >
@@ -298,4 +297,4 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         marginTop: 5,
     },
-}); 
+});

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Dimensions, Alert, Button, Text, TouchableOpacity, TextInput, TouchableHighlight, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { createStackNavigator,NavigationActions  } from 'react-navigation';
+import { Alert, Button, Text, TouchableOpacity, TextInput, TouchableHighlight, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native';
+import { createStackNavigator, NavigationActions } from 'react-navigation';
 import ResponsiveImage from 'react-native-responsive-image';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Icon1 from 'react-native-vector-icons/Ionicons';
@@ -9,7 +9,7 @@ import firebase from 'react-native-firebase';
 import resolveAssetSource from 'resolveAssetSource';
 
 var temp = require('../src/MyEvents');
-const {width: WIDTH} = Dimensions.get('window')
+const { width: WIDTH } = Dimensions.get('window');
 
 export default class EventDetail_Host extends Component {
     constructor(props) {
@@ -36,25 +36,24 @@ export default class EventDetail_Host extends Component {
             eventName: '',
             favoriteNum: '',
             liked: '',
-        }
+            rsvpNum: ''
+        };
         this.setup()
     }
 
     static navigationOptions = {
-        title: 'Event Detail',
-        headerLeft:null,
+        title: 'Event',
+        headerLeft: null,
         gesturesEnabled: false,
-
     };
 
-    handleOnNavigateBack=() => {this.componentWillMount()}
+    handleOnNavigateBack=() => {this.componentWillMount()};
 
     componentWillMount() {
         this.setup()
     }
 
     async setup() {
-        // alert("fneihfei")
         var data = this.props.navigation.getParam('data', 'None');
         var uid = firebase.auth().currentUser.uid;
         await firebase.database().ref('Events/').child(data.key).once('value', function(snapshot) {
@@ -68,6 +67,10 @@ export default class EventDetail_Host extends Component {
             this.setState({favoriteNum: snapshot.val().favoriteNum});
             if (this.state.favoriteNum == null) {
               this.setState({favoriteNum: 0});
+            }
+            this.setState({rsvpNum: snapshot.val().rsvpNum})
+            if (this.state.rsvpNum == null) {
+                this.setState({rsvpNum: 0})
             }
         }.bind(this));
 
@@ -139,9 +142,10 @@ export default class EventDetail_Host extends Component {
                                     <Text style={{fontFamily: 'Avenir', fontSize: 15}}>{this.state.date}</Text>
                                     <Text>{space}</Text>
                                     <Text style={{fontFamily: 'Avenir', fontSize: 15}}>{this.state.time}</Text>
-
-                                    <Icon style={{marginLeft: 25}} name={"tag"} size={20}/>
-                                    <Text style={{fontFamily: 'Avenir', fontSize: 15}}>$</Text>
+                                </View>
+                                <View style={{marginTop: 5, flexDirection: 'row'}}>
+                                    <Icon2 name={"user"} size={20}/>
+                                    <Text style={{fontFamily: 'Avenir', fontSize: 15}}>RSVP: {this.state.rsvpNum}</Text>
                                 </View>
                                 <View style={{marginTop: 5, flexDirection: 'row'}}>
                                     <Icon name={"location"} size={20}/>

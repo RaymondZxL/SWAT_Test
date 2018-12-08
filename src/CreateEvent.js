@@ -36,14 +36,14 @@ export default class CreateEvent extends Component {
         }
     }
 
-    // static navigationOptions={
-    //     title: 'Add Event',
-    //     headerLeft: null
-    // };
+    static navigationOptions={
+        title: 'Add Event',
+        headerLeft: null
+    };
 
     async onSubmit() {
         if (this.state.event === "") {
-            alert('Please enter valid name');
+            alert('Please enter valid name!');
             return;
         }
         if (this.state.description === "") {
@@ -62,24 +62,42 @@ export default class CreateEvent extends Component {
             alert('Please select at least one category');
             return;
         }
-        if (!this.state.maxCapText)
+        if (!this.state.maxCapText) {
+            console.log("aaa")
             this.state.maxCapacity = Number.MAX_VALUE
+        }
         else {
-            let newText = ''
-            let numbers = '0123456789'
+            console.log("bbb")
+            let newText = '';
+            let numbers = '0123456789';
 
+            // console.log("ccc" + this.state.maxCapText)
+            // if (this.state.maxCapText === '0') {
+            //     return;
+            // }
             for (var z = 0; z < this.state.maxCapText.length; z++) {
                 if (numbers.indexOf(this.state.maxCapText[z]) > -1) {
                     if (!(newText == '' && this.state.maxCapText[z] == 0))
-                        newText = newText + this.state.maxCapText[z]
-                    else {
-                        alert('Please enter an integer')
-                        return;
-                    }
+                        newText = newText + this.state.maxCapText[z];
+                }
+                else {
+                    alert('Please enter an integer');
+                    return;
                 }
             }
-            var integer = parseInt(newText, 10)
-            this.setState({maxCapacity: integer})
+            var integer = parseInt(newText, 10);
+            // alert(integer)
+            // console.log("integer" + integer)
+            if (!integer) {
+                alert('Please enter a valid number')
+                return
+            }
+            this.state.maxCapacity = integer;
+            // console.log("hihih"+this.state.maxCapacity)
+            // if (this.state.maxCapacity == 0) {
+            //     alert('Please enter a valid number')
+            //     return
+            // }
         }
 
         let i;
