@@ -17,7 +17,7 @@ class myEvents extends Component{
       location: '',
       obj: '',
       buffer_attend: [],
-      buffer_host: [],
+      // buffer_host: [],
       buffer_favorite: [],
       buffer_favorite_data: [],
       buffer_attend_data: [],
@@ -46,11 +46,11 @@ class myEvents extends Component{
     this.setState({buffer_attend_data: []})
     this.setState({buffer_favorite_data: []})
     this.setState({buffer_favorite: []})
-    this.setState({buffer_host: []})
+    // this.setState({buffer_host: []})
     this.setState({recommenddata: []})
     this.setState({eventArray: []})
     recommenddata = []
-    buffer_host = []
+    // buffer_host = []
     var user = firebase.auth().currentUser;
     await firebase.database().ref('Users/').child(user.uid).once('value', function(snapshot){
       this.setState({buffer_favorite: snapshot.val().ListOfFavorite});
@@ -75,21 +75,21 @@ class myEvents extends Component{
               attending:childSnapshot.val().attending,
             })
           //this.setState({event:childSnapshot.val().eventName})
-          if(childSnapshot.val().user === user.email){
-            buffer_host.push({
-            // key: childSnapshot.val().key,
-              key: childSnapshot.key,
-              date:childSnapshot.val().date,
-              description:childSnapshot.val().description,
-              eventName:childSnapshot.val().eventName,
-              location:childSnapshot.val().location,
-              time:childSnapshot.val().time,
-              user:childSnapshot.val().user,
-              category:childSnapshot.val().category,
-              favoriteArray:childSnapshot.val().favoriteArray,
-              attending:childSnapshot.val().attending,
-            })
-          }
+          // if(childSnapshot.val().user === user.email){
+          //   buffer_host.push({
+          //   // key: childSnapshot.val().key,
+          //     key: childSnapshot.key,
+          //     date:childSnapshot.val().date,
+          //     description:childSnapshot.val().description,
+          //     eventName:childSnapshot.val().eventName,
+          //     location:childSnapshot.val().location,
+          //     time:childSnapshot.val().time,
+          //     user:childSnapshot.val().user,
+          //     category:childSnapshot.val().category,
+          //     favoriteArray:childSnapshot.val().favoriteArray,
+          //     attending:childSnapshot.val().attending,
+          //   })
+          // }
 
           if (this.state.buffer_favorite) {
           if(this.state.buffer_favorite.includes(childSnapshot.key)){
@@ -159,7 +159,7 @@ class myEvents extends Component{
       // alert(this.state.recommenddata.length)
     }
     this.setState({initialpage: 0});
-    this.setState({buffer_host: buffer_host})
+    // this.setState({buffer_host: buffer_host})
     this.setState({recommenddata: recommenddata})
     this.setState({temp_fav: this.state.buffer_favorite_data})
     this.setState({temp_attend: this.state.buffer_attend_data})
@@ -202,9 +202,9 @@ class myEvents extends Component{
         <ScrollView tabLabel="Favorite">
           <CardList navigation={navigation} data={this.state.temp_fav} hosting={false} handleOnNavigateBack={this.handleOnNavigateBack}/> 
         </ScrollView> 
-        <ScrollView tabLabel="Hosting">
+        {/* <ScrollView tabLabel="Hosting">
           <CardList navigation={navigation} data={this.state.buffer_host} hosting={true} handleOnNavigateBack={this.handleOnNavigateBack}/>
-        </ScrollView>
+        </ScrollView> */}
       </ScrollableTabView>
       )
     }  

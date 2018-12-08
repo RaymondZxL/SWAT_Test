@@ -15,6 +15,7 @@ import CreateEvent from './src/CreateEvent'
 import EventDetail_Host from './src/Event_detail_Hosting'
 import ModifyEvent from './src/ModifyEvent'
 
+
 let screen = Dimensions.get('window');
 
 

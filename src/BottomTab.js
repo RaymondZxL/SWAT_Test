@@ -91,7 +91,7 @@ export default class BottomTab extends Component {
         onPress={()=> this.setState({selectedTab: 'profile'})}
         >
         <View style={styles.container}>
-        <Profile navigation={navigation}/>
+        <Profile navigation={navigation} hh={new Date()}/>
         <TouchableOpacity
         style={styles.button1}
         onPress={this.Logout.bind(this)}

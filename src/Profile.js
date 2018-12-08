@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, Dimensions } from 'react-native';
+import {ScrollView, Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, Dimensions } from 'react-native';
 import { createStackNavigator, NavigationActions } from 'react-navigation';
 import firebase from 'react-native-firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ResponsiveImage from 'react-native-responsive-image';
+import CardList from '../src/CardList'
 
 const {width: WIDTH} = Dimensions.get('window');
 
@@ -28,17 +29,21 @@ export default class Profile extends Component {
             email: '',
             uid: '',
             interest: [],
-            value_color: 'gray'
+            value_color: 'gray',
+            buffer_host: [],
         };
-        this.setup();
+        // this.setup();
     }
 
     static navigationOptions = {
         title: 'Profile',
     };
 
+    componentWillReceiveProps() {
+        this.setup()
+      }
     handleOnNavigateBack = () => {
-        this.componentWillMount()
+        this.setup()
     }
 	componentWillMount() {
 		this.setup()
@@ -52,7 +57,35 @@ export default class Profile extends Component {
 		        this.setState({interest: snapshot.val().interest});
 		        this.setState({email: snapshot.val().email})
 			}.bind(this))
-		}
+        }
+
+        this.setState({buffer_host: []})
+        buffer_host = []
+
+        await firebase.database().ref('Events').once('value').then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+              if (childSnapshot.key != "NumberOfEvents") {
+      
+                //this.setState({event:childSnapshot.val().eventName})
+                if(childSnapshot.val().user === user.email){
+                  buffer_host.push({
+                  // key: childSnapshot.val().key,
+                    key: childSnapshot.key,
+                    date:childSnapshot.val().date,
+                    description:childSnapshot.val().description,
+                    eventName:childSnapshot.val().eventName,
+                    location:childSnapshot.val().location,
+                    time:childSnapshot.val().time,
+                    user:childSnapshot.val().user,
+                    category:childSnapshot.val().category,
+                    favoriteArray:childSnapshot.val().favoriteArray,
+                    attending:childSnapshot.val().attending,
+                  })
+                }
+              }
+            }.bind(this))
+          }.bind(this))
+          this.setState({buffer_host: buffer_host})
 	}
 
 	renderButtons = () => {
@@ -73,7 +106,9 @@ export default class Profile extends Component {
     };
 
 	render() {
+        const {navigation} = this.props
         return (
+            <ScrollView>
             <View style={styles.container}>
                 <ResponsiveImage
                     style={{height:150, width:150, margin:20}}
@@ -106,6 +141,8 @@ export default class Profile extends Component {
                     {this.renderButtons()}
                 </View>
 
+                
+                <CardList navigation={navigation} data={this.state.buffer_host} hosting={true} handleOnNavigateBack={this.handleOnNavigateBack}/>
 				<Icon
                     color={this.state.value_color}
 					onPress={()=>{
@@ -115,6 +152,7 @@ export default class Profile extends Component {
                     style={{marginLeft: 250, right: 10}}
 				/>
             </View>
+            </ScrollView>
         )
     }
 }
