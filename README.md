@@ -3,6 +3,8 @@ Introduction
 College is the time for new experiences. Experiences develop perspective, resulting in personal growth and a better understanding of others; attributes vital to success in the real world. Stay Woke At Trending is an IOS based app that provides a way for college students attending University of California San Diego to expand and develop their network by hosting and attending a variety of events, archiving favorite events, as well as personalize their discovery feed through a filtering system based on popularity, time and category, overall providing a better user experience. 
 
 
+
+
 Login Credentials
 
 For testing purposes, we have created an account and provided the credentials below.
@@ -10,11 +12,15 @@ Username: test222@ucsd.edu
 Password: test222
 
 
+
+
 Requirements
 
 This application must be run on an iOS platform.
 The user must have an Internet connection while using the application.
 XCode installed.
+
+
 
 
 Installation Instruction
@@ -30,10 +36,14 @@ Run following command to download node modules
 	react-native link
 
 
+
+
 How to Run
 
 npm start
 react-native run-ios
+
+
 
 
 Known Bugs
@@ -49,13 +59,18 @@ The user might have to give a second before tapping again the button so that the
 If there is any warning pops up, click on “dismiss all”, the app should still work as expected.
 
 
+
+
 Troubleshooting
 
 If any unexpected behavior occurs, try refreshing the app by shaking the phone and pressing the refresh button.
 
 
+
+
 Contacts for Technical Support
 
 Zhixian Chen 8584053676 Algorithm Specialist
+
 Shirley Zhang 6263752288 Quality Assurance Lead
 
