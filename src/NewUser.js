@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Alert, Button, Text, TouchableOpacity, TextInput, View, StyleSheet, Image, KeyboardAvoidingView, ScrollView, Keyboard, TouchableWithoutFeedback, Dimensions } from 'react-native';
-import {createStackNavigator, NavigationActions} from 'react-navigation';
+import { createStackNavigator, NavigationActions } from 'react-navigation';
 import firebase from 'react-native-firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
-import styles from '../src/Styles';
-import {TagSelect} from "react-native-tag-select";
+import { TagSelect } from "react-native-tag-select";
+import ResponsiveImage from 'react-native-responsive-image';
 
-const {width: WIDTH} = Dimensions.get('window')
+const {width: WIDTH} = Dimensions.get('window');
 
 const data = [
     { id: 1, label: 'Arts & Crafts'},
@@ -85,7 +85,6 @@ export default class NewUser extends React.Component {
 							displayName: this.state.name, 
            		email: this.state.email,
            	}).then(function() {
-           		// alert('');
            	}).catch(function(error) {
 							 alert(error.errorMessage);
 							 return;
@@ -139,10 +138,10 @@ export default class NewUser extends React.Component {
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 					<ScrollView>
 						<View style={styles.container1}>
-							<TouchableOpacity style={{margin:10, padding:10, alignItems:'center'}} onPress={this.myfun}>
-								<Icon name={'ios-radio-button-off'} style={{opacity: 0.7, color:'gray'}} size = {130}/>
-								<Icon name={'ios-camera'} style={{opacity:0.7, color:'gray', position:'absolute', marginTop: 55}} size = {40}/>
-							</TouchableOpacity>
+                            <ResponsiveImage
+                                style={{height: 150, width: 150, margin: 20}}
+                                source={require('../assets/profile.png')}
+                            />
 
 							<View style={{flexDirection: 'row', justifyContent:'space-around', alignItems: 'center'}}>
 								<Icon name={'ios-mail'} size={20} style={{opacity:0.5, left: WIDTH*0.05}}/>
@@ -229,7 +228,6 @@ export default class NewUser extends React.Component {
 								data = {data}
 								itemStyleSelected = {{opacity: 0.5, backgroundColor: 'gray', borderColor: 'gray', borderWidth: 1}}
 								containerStyle = {{marginLeft: 60, marginRight: 50}}
-								// ref={(tag)=>this.setState({tag})}
 								ref = {(tag)=>{this.tag = tag}}
 							/>
 
@@ -250,3 +248,66 @@ export default class NewUser extends React.Component {
 		)
 	}
 }
+
+const styles = StyleSheet.create({
+    container1: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        flexDirection: 'column',
+    },
+
+    loginInput: {
+        width: WIDTH - 150,
+        height: 45,
+        fontSize: 16,
+        paddingLeft: 10,
+        marginHorizontal: 25,
+    },
+
+    buttonText: {
+        fontFamily: 'Avenir',
+        fontSize: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+    },
+
+    buttonText1: {
+        fontFamily: 'Avenir',
+        fontSize: 15,
+        flexDirection: 'row',
+        fontWeight: 'bold',
+        left: 5,
+    },
+
+    btnEyeReg: {
+        opacity:0.5,
+        position: 'absolute',
+        flexDirection: 'row',
+        right: WIDTH*0.04,
+        top: 20,
+    },
+
+    button1: {
+        alignItems: 'center',
+        backgroundColor: '#cc0f0f',
+        opacity: 0.7,
+        width: 300,
+        height: 44,
+        padding: 10,
+        borderWidth: 0,
+        borderColor: 'transparent',
+        borderRadius: 5,
+        marginBottom: 10,
+    },
+
+    submitText: {
+        fontFamily: 'Avenir',
+        fontSize: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+    },
+});

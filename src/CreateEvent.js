@@ -5,6 +5,8 @@ import firebase from 'react-native-firebase';
 import DatePicker from 'react-native-datepicker'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TagSelect } from "react-native-tag-select";
+import resolveAssetSource from 'resolveAssetSource';
+import ResponsiveImage from 'react-native-responsive-image';
 
 const { width: WIDTH } = Dimensions.get('window');
 const data = [
@@ -143,18 +145,21 @@ export default class CreateEvent extends Component {
 	}
 
     render() {
+        let pic = require('../assets/event.jpg');
+        let s = resolveAssetSource(pic);
+        let w = s.width;
+        let h = s.height;
+        let space = '   ';
         return(
             <KeyboardAvoidingView keyboardVerticalOffset={Header.HEIGHT + 20} style={{flex: 1}} behavior="padding">
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <ScrollView>
                         <View style={styles.container1}>
-                            <TouchableOpacity style={{margin: 10, padding: 10, alignItems: 'center'}} onPress={this.myfun}>
-                                <Icon name={'ios-radio-button-off'} style={{opacity: 0.7, color: 'gray'}} size={130}/>
-                                <Icon name={'ios-camera'} style={{opacity: 0.7, color: 'gray', position: 'absolute', marginTop: 55}} size={40}/>
-                            </TouchableOpacity>
+
+                            <ResponsiveImage style = {{height: h*(WIDTH/w), width: WIDTH}} source={require('../assets/event.jpg')}/>
 
                             <View style={{justifyContent: 'space-around'}}>
-                                <Text style={{color: '#cc0f0f', fontWeight: 'bold', fontFamily: 'Avenir', marginTop: -20}}>Event Name</Text>
+                                <Text style={{color: '#cc0f0f', fontWeight: 'bold', fontFamily: 'Avenir'}}>Event Name</Text>
                                 <TextInput
                                     style={styles.eventInput}
                                     event={this.state.event}

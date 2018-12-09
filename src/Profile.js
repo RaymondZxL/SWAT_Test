@@ -32,7 +32,6 @@ export default class Profile extends Component {
             value_color: 'gray',
             buffer_host: [],
         };
-        // this.setup();
     }
 
     static navigationOptions = {
@@ -96,7 +95,7 @@ export default class Profile extends Component {
                     disabled={true}
                     onPress = {() => {}}
                     key={i}
-                    style={{backgroundColor: '#f4f6f7', borderRadius: 5, borderWidth: 10, marginTop: 20, borderColor: '#f4f6f7', alignItems: 'center'}}
+                    style={{backgroundColor: '#f4f6f7', borderRadius: 5, borderWidth: 10, marginBottom: 5, marginLeft: 10, marginRight: 5, borderColor: '#f4f6f7', alignItems: 'flex-start'}}
                 >
                     <Text style={{color: 'black'}}>{this.state.interest[i].label}</Text>
                 </TouchableOpacity>
@@ -109,59 +108,72 @@ export default class Profile extends Component {
         const {navigation} = this.props
         return (
             <ScrollView>
-            <View style={styles.container}>
-                <ResponsiveImage
-                    style={{height:150, width:150, margin:20}}
-                    source={require('../assets/Gary.jpg')}
-                />
+                <View style={styles.container}>
+                    <View style={{justifyContent:'space-around', alignItems: 'center'}}>
+                        <ResponsiveImage
+                            style={{height: 150, width: 150, margin: 20}}
+                            source={require('../assets/profile.png')}
+                        />
+                    </View>
 
-                <Text style={{fontSize: 30, fontWeight: 'bold'}}>{this.state.name}</Text>
+                    <View style={{flexDirection: 'row',  justifyContent: 'center', alignItems: 'center'}}>
+                        <Text style={{fontSize: 30, fontWeight: 'bold'}}>{this.state.name}</Text>
+                        <Icon
+                            color={this.state.value_color}
+                            onPress={()=>{
+                                this.props.navigation.navigate('ChangeProfile', {onNavigateBack: this.handleOnNavigateBack})}}
+                            name = {"md-create"}
+                            size={20}
+                            style={{marginTop: 6, padding: 10}}
+                        />
+                    </View>
 
-                <View style={{flexDirection: 'row', justifyContent:'space-around', alignItems: 'center'}}>
-                    <Icon name={'ios-mail'} size={20} style={{opacity:0.5, left: WIDTH*0.05}}/>
-                    <TextInput
-                        style={styles.loginInput}
-                        editable={false}
-                        defaultValue={this.state.email}
-                        color={'black'}
-                    />
+                    <View style={{flexDirection: 'row'}}>
+                        <Icon name={'ios-mail'} size={20} style={{opacity:0.5, left: WIDTH*0.05, marginTop: 12}}/>
+                        <TextInput
+                            style={styles.loginInput}
+                            editable={false}
+                            defaultValue={this.state.email}
+                            color={'black'}
+                        />
+                    </View>
+
+                    <View style={{flexDirection: 'row'}}>
+                        <Icon name={'ios-bookmark'} size={20} style={{opacity:0.5, left: WIDTH*0.06, marginTop: 12}}/>
+                        <TextInput
+                            style={styles.loginInput2}
+                            editable={false}
+                            defaultValue={'Interests'}
+                            color='black'
+                        />
+                    </View>
+
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap', marginLeft: 35, marginBottom: 5}}>
+                        {this.renderButtons()}
+                    </View>
+
+                    <View style={{flexDirection: 'row'}}>
+                        <Icon name={'md-calendar'} size={20} style={{opacity:0.5, left: WIDTH*0.06, marginTop: 12}}/>
+                        <TextInput
+                            style={styles.loginInput3}
+                            editable={false}
+                            defaultValue={'Hosting List'}
+                            color='black'
+                        />
+                    </View>
+
+                    <CardList navigation={navigation} data={this.state.buffer_host} hosting={true} handleOnNavigateBack={this.handleOnNavigateBack}/>
                 </View>
-
-                <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
-                    <Icon name={'ios-bookmark'} size={20} style={{opacity:0.5, left: WIDTH*0.05}}/>
-                    <TextInput
-                        style={styles.loginInput}
-                        editable={false}
-                        defaultValue={'Interests'}
-                        color='black'
-                    />
-                </View>
-
-                <View>
-                    {this.renderButtons()}
-                </View>
-
-                
-                <CardList navigation={navigation} data={this.state.buffer_host} hosting={true} handleOnNavigateBack={this.handleOnNavigateBack}/>
-				<Icon
-                    color={this.state.value_color}
-					onPress={()=>{
-                        this.props.navigation.navigate('ChangeProfile', {onNavigateBack: this.handleOnNavigateBack})}}
-                    name = {"ios-create"}
-                    size={35}
-                    style={{marginLeft: 250, right: 10}}
-				/>
-            </View>
             </ScrollView>
         )
     }
 }
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
         justifyContent: 'space-evenly',
         flexDirection: 'column',
     },
@@ -169,8 +181,27 @@ const styles = StyleSheet.create({
     loginInput: {
         width: WIDTH - 150,
         height: 45,
+        fontFamily: 'Avenir',
         fontSize: 16,
-        paddingLeft: 10,
+        paddingLeft: 5,
+        marginHorizontal: 25,
+    },
+
+    loginInput2: {
+        width: WIDTH - 150,
+        height: 45,
+        fontFamily: 'Avenir',
+        fontSize: 16,
+        paddingLeft: 12,
+        marginHorizontal: 25,
+    },
+
+    loginInput3: {
+        width: WIDTH - 150,
+        height: 45,
+        fontFamily: 'Avenir',
+        fontSize: 16,
+        paddingLeft: 9,
         marginHorizontal: 25,
     },
 });
