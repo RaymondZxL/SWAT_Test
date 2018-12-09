@@ -36,8 +36,8 @@ export default class NewUser extends React.Component {
       onOffPassword2: true,
       clicked2: false,
 			// avatarSource: null,
-			tag: null
 		}	
+		tag: null
 	}
 
 	static navigationOptions = {
