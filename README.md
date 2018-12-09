@@ -57,6 +57,11 @@ If any unexpected behavior occurs, try refreshing the app by shaking the phone a
 
 
 
+Additional Information:
+While running the app on the device we provide, try not to exit the app for a long time(the system might shut the app and the app will be disconnected from Xcode, which we use to build our app). 
+
+
+
 Contacts for Technical Support:
 Zhixian Chen 8584053676 Algorithm Specialist;
 Shirley Zhang 6263752288 Quality Assurance Lead
