@@ -166,16 +166,16 @@ export default class EventDetail_Host extends Component {
                             onPress={()=>{this.props.navigation.state.params.onNavigateBack(); this.props.navigation.goBack()}}
                         />
 
-                        <View style={{flex: 1, marginLeft: 180, marginTop: 2}}>
+                        <View style={{flex: 1, marginLeft: 210, marginTop: 0}}>
                             <Icon1
                                 color={'gray'}
                                 onPress={() => {this.deleteEvent()}}
                                 name={"ios-trash"}
-                                size={30}
+                                size={33}
                             />
                         </View>
 
-                        <View style={{marginRight: 0, marginTop: -5}}>
+                        <View style={{marginRight: 5,}}>
                             <Icon2
                                 color={'gray'}
                                 onPress={() => {this.props.navigation.navigate('ModifyEvent', {onNavigateBack: this.handleOnNavigateBack, data: this.superData})}}
@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
     textBox: {
         fontFamily: 'Avenir',
         fontSize: 15,
+        marginBottom: 3,
         fontWeight: 'bold',
     },
 
